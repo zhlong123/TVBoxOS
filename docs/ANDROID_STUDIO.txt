@@ -1,0 +1,42 @@
+Android Studio 一键运行配置
+==========================
+
+1. 打开项目
+   .\scripts\open-android-studio.ps1
+   或 File → Open → 选择 TVBox 根目录
+
+2. 首次同步
+   - 等待 Gradle Sync 完成（已配置腾讯云 Gradle 镜像）
+   - SDK 路径见 local.properties: D:\Tools\Android\SDK
+
+3. 选择构建变体（必做）
+   View → Tool Windows → Build Variants
+   将 app 模块设为: java64Debug（推荐调试）
+
+   变体说明:
+   - java64Debug / java64Release   — 64 位，无 Python
+   - java32Release                 — 32 位老设备
+   - python64Release               — 含 Python 爬虫
+
+4. 运行配置
+   项目已包含: .run/TVBox_java64_Debug.run.xml
+   Run 下拉框选择「TVBox java64 Debug」→ 点击 Run (Shift+F10)
+
+   若未出现:
+   Run → Edit Configurations → + → Android App
+   Module: TVBox.app.main
+   Launch: Default Activity
+
+5. 连接设备
+   - 真机: 开启 USB 调试，adb devices 可见
+   - 模拟器: AVD 需 arm64-v8a 镜像（推荐 API 28–33）
+
+6. 命令行等效（无需 Studio）
+   .\gradlew.bat installJava64Debug
+   adb shell am start -n com.github.tvbox.osc.jun/com.github.tvbox.osc.ui.activity.HomeActivity
+
+常见问题
+--------
+- Sync 失败: 检查网络 / 重试；Gradle 镜像见 gradle-wrapper.properties
+- 找不到 SDK: 编辑 local.properties 的 sdk.dir
+- Python 变体编译失败: 安装 Python 3.10，设置 PYTHON_EXE 环境变量

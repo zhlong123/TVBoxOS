@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -36,13 +37,14 @@ import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.event.ServerEvent;
 import com.github.tvbox.osc.ui.adapter.PinyinAdapter;
 import com.github.tvbox.osc.ui.adapter.SearchAdapter;
-import com.github.tvbox.osc.ui.dialog.RemoteDialog;
 import com.github.tvbox.osc.ui.dialog.SearchCheckboxDialog;
 import com.github.tvbox.osc.ui.tv.widget.SearchKeyboard;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
+import com.github.tvbox.osc.util.FocusAnimHelper;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.HistoryHelper;
 import com.github.tvbox.osc.util.SearchHelper;
+import com.github.tvbox.osc.util.UiLayoutConfig;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -105,11 +107,10 @@ public class SearchActivity extends BaseActivity {
     private TvRecyclerView mGridViewWord;
     private GridLayout historyWordGrid;
     SourceViewModel sourceViewModel;
-    private RemoteDialog remoteDialog;
     private EditText etSearch;
     private TextView tvSearch;
     private TextView tvClear;
-    private ImageView tvHistoryClear;
+    private TextView tvHistoryClear;
     private SearchKeyboard keyboard;
     private SearchAdapter searchAdapter;
     private PinyinAdapter wordAdapter;
@@ -170,6 +171,16 @@ public class SearchActivity extends BaseActivity {
         });
     }
 
+    private void bindFocusAnim(View view) {
+        view.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                FocusAnimHelper.focusIn(v);
+            } else {
+                FocusAnimHelper.focusOut(v);
+            }
+        });
+    }
+
     private void initView() {
         EventBus.getDefault().register(this);
         llLayout = findViewById(R.id.llLayout);
@@ -183,10 +194,15 @@ public class SearchActivity extends BaseActivity {
         mGridViewWord = findViewById(R.id.mGridViewWord);
         historyWordGrid = findViewById(R.id.historyWordGrid);
         tvHistoryClear = findViewById(R.id.tvHistoryClear);
+        wordsSwitch = findViewById(R.id.wordSwitch);
+        bindFocusAnim(tvSearchCheckboxBtn);
+        bindFocusAnim(tvSearch);
+        bindFocusAnim(tvClear);
+        bindFocusAnim(tvHistoryClear);
+        bindFocusAnim(wordsSwitch);
         mGridViewWord.setHasFixedSize(true);
         wordAdapter = new PinyinAdapter();
         hotWordAdapter = new PinyinAdapter();
-        wordsSwitch = findViewById(R.id.wordSwitch);
         applySearchWordMode();
         wordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -200,15 +216,53 @@ public class SearchActivity extends BaseActivity {
                 startSearch(hotWordAdapter.getItem(position));
             }
         });
+        mGridViewWord.setOnItemListener(new TvRecyclerView.OnItemListener() {
+            @Override
+            public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
+            }
+
+            @Override
+            public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+            }
+
+            @Override
+            public void onItemClick(TvRecyclerView parent, View itemView, int position) {
+                if (itemView != null) {
+                    itemView.performClick();
+                }
+            }
+        });
         mGridView.setHasFixedSize(true);
         // lite
         if (Hawk.get(HawkConfig.SEARCH_VIEW, 0) == 0)
             mGridView.setLayoutManager(new V7LinearLayoutManager(this.mContext, 1, false));
             // with preview
         else
-            mGridView.setLayoutManager(new V7GridLayoutManager(this.mContext, 3));
+            mGridView.setLayoutManager(new V7GridLayoutManager(this.mContext, UiLayoutConfig.getGridSpan(true, 4)));
         searchAdapter = new SearchAdapter();
         mGridView.setAdapter(searchAdapter);
+        final boolean searchGridMode = Hawk.get(HawkConfig.SEARCH_VIEW, 0) != 0;
+        mGridView.setOnItemListener(new TvRecyclerView.OnItemListener() {
+            @Override
+            public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
+                if (searchGridMode) {
+                    return;
+                }
+                FocusAnimHelper.focusOut(itemView);
+            }
+
+            @Override
+            public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+                if (searchGridMode) {
+                    return;
+                }
+                FocusAnimHelper.focusIn(itemView);
+            }
+
+            @Override
+            public void onItemClick(TvRecyclerView parent, View itemView, int position) {
+            }
+        });
         searchAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -340,14 +394,14 @@ public class SearchActivity extends BaseActivity {
         keyboard.setOnSearchKeyListener(new SearchKeyboard.OnSearchKeyListener() {
             @Override
             public void onSearchKey(int pos, String key) {
-                if (pos > 1) {
+                if (pos > 0) {
                     String text = etSearch.getText().toString().trim();
                     text += key;
                     etSearch.setText(text);
                     if (text.length() > 0) {
                         loadRec(text);
                     }
-                } else if (pos == 1) {
+                } else if (pos == 0) {
                     String text = etSearch.getText().toString().trim();
                     if (text.length() > 0) {
                         text = text.substring(0, text.length() - 1);
@@ -356,9 +410,6 @@ public class SearchActivity extends BaseActivity {
                     if (text.length() > 0) {
                         loadRec(text);
                     }
-                } else if (pos == 0) {
-                    remoteDialog = new RemoteDialog(mContext);
-                    remoteDialog.show();
                 }
             }
         });
@@ -434,6 +485,7 @@ public class SearchActivity extends BaseActivity {
             setAggregateHotTitle();
             wordsSwitch.setFocusable(false);
             wordsSwitch.setBackground(null);
+            wordsSwitch.setTextColor(getResources().getColor(R.color.ui_accent_bright));
             mGridViewWord.setLayoutManager(new V7LinearLayoutManager(this.mContext, 1, false));
             mGridViewWord.setAdapter(hotWordAdapter);
             refreshSearchHistoryWords();
@@ -445,7 +497,8 @@ public class SearchActivity extends BaseActivity {
             }
             setNormalWordTitle();
             wordsSwitch.setFocusable(true);
-            wordsSwitch.setBackgroundResource(R.drawable.shape_user_focus);
+            wordsSwitch.setBackgroundResource(R.drawable.button_detail_secondary);
+            wordsSwitch.setTextColor(getResources().getColor(R.color.ui_text_primary));
             mGridViewWord.setLayoutManager(new V7LinearLayoutManager(this.mContext, 1, false));
             mGridViewWord.setAdapter(wordAdapter);
         }
@@ -462,39 +515,22 @@ public class SearchActivity extends BaseActivity {
     private void refreshSearchHistoryWords() {
         ArrayList<String> history = Hawk.get(HawkConfig.SEARCH_HISTORY, new ArrayList<String>());
         historyWordGrid.removeAllViews();
-        int itemHeight = getResources().getDimensionPixelSize(R.dimen.vs_50);
         int itemMargin = getResources().getDimensionPixelSize(R.dimen.vs_5);
-        int paddingH = getResources().getDimensionPixelSize(R.dimen.vs_10);
-        int maxWidth = getResources().getDimensionPixelSize(R.dimen.vs_220);
-        float textSize = getResources().getDimension(R.dimen.ts_22);
-        int textColor = getResources().getColor(R.color.color_FFFFFF);
+        LayoutInflater inflater = LayoutInflater.from(this);
         for (int i = 0; i < history.size(); i++) {
             final String word = history.get(i);
-            TextView item = new TextView(this);
-            item.setText(word);
-            item.setSingleLine(true);
-            item.setEllipsize(TextUtils.TruncateAt.END);
-            item.setGravity(Gravity.CENTER);
-            item.setIncludeFontPadding(false);
-            item.setFocusable(true);
-            item.setTextColor(textColor);
-            item.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-            item.setMaxWidth(maxWidth);
-            item.setMinWidth(getResources().getDimensionPixelSize(R.dimen.vs_80));
-            item.setPadding(paddingH, 0, paddingH, 0);
-            item.setBackgroundResource(R.drawable.shape_user_focus);
-            item.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startSearch(word);
-                }
-            });
+            View item = inflater.inflate(R.layout.item_search_word_split, historyWordGrid, false);
+            TextView tv = item.findViewById(R.id.tvSearchWord);
+            tv.setText(word);
+            item.setOnClickListener(v -> startSearch(word));
+            FocusAnimHelper.attachSearchWordFocus(item);
             GridLayout.LayoutParams params = new GridLayout.LayoutParams(
-                    GridLayout.spec(i / 3),
-                    GridLayout.spec(i % 3)
+                    GridLayout.spec(i / 2),
+                    GridLayout.spec(i % 2)
             );
             params.width = GridLayout.LayoutParams.WRAP_CONTENT;
-            params.height = itemHeight;
+            params.height = GridLayout.LayoutParams.WRAP_CONTENT;
+            params.setGravity(Gravity.START);
             params.setMargins(itemMargin, itemMargin, itemMargin, itemMargin);
             historyWordGrid.addView(item, params);
         }
@@ -685,10 +721,6 @@ public class SearchActivity extends BaseActivity {
 
     private void search(String title) {
         cancel();
-        if (remoteDialog != null) {
-            remoteDialog.dismiss();
-            remoteDialog = null;
-        }
         showLoading();
         etSearch.setText(title);
 

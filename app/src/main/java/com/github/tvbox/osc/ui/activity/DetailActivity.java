@@ -9,6 +9,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
+import androidx.core.text.HtmlCompat;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -49,11 +50,13 @@ import com.github.tvbox.osc.ui.dialog.QuickSearchDialog;
 import com.github.tvbox.osc.ui.fragment.PlayFragment;
 import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
+import com.github.tvbox.osc.util.FocusAnimHelper;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.MD5;
 import com.github.tvbox.osc.util.SearchHelper;
 import com.github.tvbox.osc.util.SubtitleHelper;
+import com.github.tvbox.osc.util.UiLayoutConfig;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
 import com.lzy.okgo.OkGo;
 import com.orhanobut.hawk.Hawk;
@@ -108,6 +111,7 @@ public class DetailActivity extends BaseActivity {
     private TextView tvActor;
     private TextView tvDirector;
     private TextView tvPlayUrl;
+    private String currentPlayUrl = "";
     private TextView tvDes;
     private TextView tvPlay;
 //    private TextView tvSort;
@@ -184,7 +188,7 @@ public class DetailActivity extends BaseActivity {
         mEmptyPlayList = findViewById(R.id.mEmptyPlaylist);
         mGridView = findViewById(R.id.mGridView);
         mGridView.setHasFixedSize(false);
-        this.mGridViewLayoutMgr = new V7GridLayoutManager(this.mContext, 6);
+        this.mGridViewLayoutMgr = new V7GridLayoutManager(this.mContext, UiLayoutConfig.getGridSpan(true, 7));
         mGridView.setLayoutManager(this.mGridViewLayoutMgr);
 //        mGridView.setLayoutManager(new V7LinearLayoutManager(this.mContext, 0, false));
 
@@ -307,13 +311,19 @@ public class DetailActivity extends BaseActivity {
         tvPlayUrl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //获取剪切板管理器
-                ClipboardManager cm = (ClipboardManager)getSystemService(mContext.CLIPBOARD_SERVICE);
-                //设置内容到剪切板
-                cm.setPrimaryClip(ClipData.newPlainText(null, tvPlayUrl.getText().toString().replace("播放地址：","")));
+                if (TextUtils.isEmpty(currentPlayUrl)) {
+                    return;
+                }
+                ClipboardManager cm = (ClipboardManager) getSystemService(mContext.CLIPBOARD_SERVICE);
+                cm.setPrimaryClip(ClipData.newPlainText(null, currentPlayUrl));
                 Toast.makeText(DetailActivity.this, "已复制", Toast.LENGTH_SHORT).show();
             }
         });
+        bindDetailButtonFocus(tvPlay);
+        bindDetailButtonFocus(tvQuickSearch);
+        bindDetailButtonFocus(tvDesc);
+        bindDetailButtonFocus(tvCollect);
+        bindDetailButtonFocus(tvPlayUrl);
 
 
         tvSeriesSort.setOnClickListener(new View.OnClickListener() {
@@ -346,7 +356,7 @@ public class DetailActivity extends BaseActivity {
                     public void run() {
                         FastClickCheckUtil.check(v);
                         DescDialog dialog = new DescDialog(mContext);
-                        dialog.setDescribe(removeHtmlTag(mVideo.des));
+                        dialog.setDescribe(cleanDescription(mVideo.des));
                         dialog.show();
                     }
                 });
@@ -357,11 +367,13 @@ public class DetailActivity extends BaseActivity {
             @Override
             public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
                 seriesSelect = false;
+                FocusAnimHelper.focusOut(itemView);
             }
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
                 seriesSelect = true;
+                FocusAnimHelper.focusIn(itemView);
             }
 
             @Override
@@ -412,19 +424,19 @@ public class DetailActivity extends BaseActivity {
 
             @Override
             public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
-//                seriesSelect = false;
+                FocusAnimHelper.focusOut(itemView);
             }
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+                FocusAnimHelper.focusIn(itemView);
                 refresh(itemView, position);
-//                if(isReverse)vodInfo.reverse();
             }
 
             @Override
             public void onItemClick(TvRecyclerView parent, View itemView, int position) {
+                FocusAnimHelper.focusIn(itemView);
                 refresh(itemView, position);
-//                if(isReverse)vodInfo.reverse();
             }
         });
         seriesAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -473,17 +485,17 @@ public class DetailActivity extends BaseActivity {
             @Override
             public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
                 TextView txtView = itemView.findViewById(R.id.tvSeriesGroup);
-                txtView.setTextColor(Color.WHITE);
-//                currentSeriesGroupView = null;
+                txtView.setTextColor(mContext.getResources().getColor(R.color.color_BBFFFFFF));
+                FocusAnimHelper.focusOut(itemView);
             }
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
                 TextView txtView = itemView.findViewById(R.id.tvSeriesGroup);
                 txtView.setTextColor(mContext.getResources().getColor(R.color.color_02F8E1));
+                FocusAnimHelper.focusIn(itemView);
                 if (vodInfo != null && vodInfo.seriesMap.get(vodInfo.playFlag).size() > 0) {
                     int targetPos = position * GroupCount;
-//                    mGridView.smoothScrollToPosition(targetPos);
                     customSeriesScrollPos(targetPos);
                 }
                 currentSeriesGroupView = itemView;
@@ -556,7 +568,7 @@ public class DetailActivity extends BaseActivity {
         if (vodInfo != null && vodInfo.seriesMap.get(vodInfo.playFlag).size() > 0) {
             preFlag = vodInfo.playFlag;
             //更新播放地址
-            setTextShow(tvPlayUrl, "播放地址：", vodInfo.seriesMap.get(vodInfo.playFlag).get(vodInfo.playIndex).url);
+            setPlayUrlChip(vodInfo.seriesMap.get(vodInfo.playFlag).get(vodInfo.playIndex).url);
             Bundle bundle = new Bundle();
             //保存历史
             insertVod(firstsourceKey, vodInfo);
@@ -682,6 +694,30 @@ public class DetailActivity extends BaseActivity {
         }
     }
 
+    private void setPlayUrlChip(String url) {
+        if (url == null || url.trim().isEmpty()) {
+            currentPlayUrl = "";
+            tvPlayUrl.setVisibility(View.GONE);
+            return;
+        }
+        currentPlayUrl = url.trim();
+        tvPlayUrl.setVisibility(View.VISIBLE);
+        tvPlayUrl.setText("复制链接");
+    }
+
+    private void bindDetailButtonFocus(TextView view) {
+        if (view == null) {
+            return;
+        }
+        view.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                FocusAnimHelper.focusIn(v);
+            } else {
+                FocusAnimHelper.focusOut(v);
+            }
+        });
+    }
+
     private void setTextShow(TextView view, String tag, String info) {
         if (info == null || info.trim().isEmpty()) {
             view.setVisibility(View.GONE);
@@ -691,10 +727,22 @@ public class DetailActivity extends BaseActivity {
         view.setText(Html.fromHtml(getHtml(tag, info)));
     }
 
-    private String removeHtmlTag(String info) {
-        if (info == null)
+    private String cleanDescription(String info) {
+        if (info == null) {
             return "";
-        return info.replaceAll("\\<.*?\\>", "").replaceAll("\\s", "");
+        }
+        String html = info.replaceAll("(?i)<br\\s*/?>", "\n");
+        html = html.replaceAll("(?i)</p>", "\n");
+        html = html.replaceAll("(?i)<p[^>]*>", "");
+        String text = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_COMPACT).toString();
+        text = text.replace('\u00A0', ' ');
+        text = text.replaceAll("[ \\t\\f]+", " ");
+        text = text.replaceAll("\n{3,}", "\n\n");
+        return text.trim();
+    }
+
+    private String removeHtmlTag(String info) {
+        return cleanDescription(info);
     }
 
     private void applyPreviewRoundCorners() {
@@ -767,7 +815,7 @@ public class DetailActivity extends BaseActivity {
                     }
                     setTextShow(tvActor, "演员：", mVideo.actor);
                     setTextShow(tvDirector, "导演：", mVideo.director);
-                    setTextShow(tvDes, "内容简介：", removeHtmlTag(mVideo.des));
+                    setTextShow(tvDes, "内容简介：", cleanDescription(mVideo.des));
                     if (!TextUtils.isEmpty(mVideo.pic)) {
                         Picasso.get()
                                 .load(DefaultConfig.checkReplaceProxy(mVideo.pic))
@@ -820,7 +868,7 @@ public class DetailActivity extends BaseActivity {
                                 flag.selected = false;
                         }
                         //设置播放地址
-                        setTextShow(tvPlayUrl, "播放地址：", vodInfo.seriesMap.get(vodInfo.playFlag).get(0).url);
+                        setPlayUrlChip(vodInfo.seriesMap.get(vodInfo.playFlag).get(0).url);
                         seriesFlagAdapter.setNewData(vodInfo.seriesFlags);
                         mGridViewFlag.scrollToPosition(flagScrollTo);
 
@@ -1349,6 +1397,6 @@ public class DetailActivity extends BaseActivity {
 
     private void setTvPlayUrl(String url)
     {
-        setTextShow(tvPlayUrl, "播放地址：", url);
+        setPlayUrlChip(url);
     }
 }

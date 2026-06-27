@@ -68,7 +68,7 @@ public class ButtonAdapter<T> extends ListAdapter<T, ButtonAdapter.SelectViewHol
         TextView item = holder.itemView.findViewById(R.id.tvName);
         item.setText(dialogInterface.getDisplay(value));
         if (position == select) {
-            item.setTextColor(0xff02f8e1);
+            item.setTextColor(item.getContext().getColor(R.color.ui_accent_bright));
             item.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         } else {
             item.setTextColor(Color.WHITE);

@@ -3,18 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_app_default"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <LinearLayout
         android:id="@+id/topLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/vs_50"
-        android:layout_marginTop="@dimen/vs_10"
+        android:layout_marginLeft="@dimen/vs_40"
+        android:layout_marginTop="@dimen/vs_12"
+        android:layout_marginRight="@dimen/vs_40"
+        android:background="@drawable/bg_top_bar"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/vs_50"
-        android:paddingRight="@dimen/vs_50"
-        android:paddingBottom="@dimen/vs_10"
+        android:paddingLeft="@dimen/vs_24"
+        android:paddingRight="@dimen/vs_24"
+        android:paddingBottom="@dimen/vs_4"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,9 +32,10 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:gravity="left|center_vertical"
+            android:letterSpacing="0.12"
             android:text="@string/app_name"
             android:textAlignment="gravity"
-            android:textColor="@android:color/white"
+            android:textColor="@color/ui_text_primary"
             android:textSize="@dimen/ts_30"
             android:textStyle="bold" />
 
@@ -43,8 +50,8 @@
             android:includeFontPadding="false"
             android:maxLines="1"
             android:textAlignment="gravity"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/ts_26"
+            android:textColor="@color/ui_text_secondary"
+            android:textSize="@dimen/ts_24"
             tools:text="2026/06/16  周二  15:01" />
     </LinearLayout>
 
@@ -64,15 +71,22 @@
             android:id="@+id/mGridView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/vs_10"
-            android:layout_marginBottom="@dimen/vs_10"
-            android:paddingLeft="@dimen/vs_50"
-            android:paddingRight="@dimen/vs_50"
+            android:layout_marginTop="@dimen/vs_12"
+            android:layout_marginBottom="@dimen/vs_8"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:elevation="@dimen/vs_5"
+            android:paddingLeft="@dimen/vs_40"
+            android:paddingRight="@dimen/vs_40"
+            android:translationZ="@dimen/vs_5"
             app:tv_selectedItemIsCentered="true" />
 
         <com.github.tvbox.osc.ui.tv.widget.NoScrollViewPager
             android:id="@+id/mViewPager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/vs_5"
+            android:clipChildren="true"
+            android:clipToPadding="true" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

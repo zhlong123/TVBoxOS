@@ -9,6 +9,7 @@
         android:id="@+id/llLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/bg_app_default"
         android:orientation="vertical">
 
         <LinearLayout
@@ -26,14 +27,14 @@
                 android:layout_width="@dimen/vs_480"
                 android:layout_height="@dimen/vs_320"
                 android:layout_marginLeft="@dimen/vs_10"
-                android:background="@drawable/shape_detail_thumb_bg">
+                android:background="@drawable/shape_detail_thumb_bg"
+                android:clipChildren="true"
+                android:clipToOutline="true">
 
                 <ImageView
                     android:id="@+id/ivThumb"
-                    android:layout_width="@dimen/vs_230"
-                    android:layout_height="@dimen/vs_300"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/vs_10"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:scaleType="centerCrop" />
             </FrameLayout>
 
@@ -48,19 +49,26 @@
                 android:layout_height="@dimen/vs_320"
                 android:layout_marginStart="@dimen/vs_20"
                 android:layout_marginLeft="@dimen/vs_20"
-                android:orientation="vertical">
+                android:background="@drawable/bg_detail_info_panel"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/vs_20"
+                android:paddingTop="@dimen/vs_15"
+                android:paddingRight="@dimen/vs_20"
+                android:paddingBottom="@dimen/vs_15">
 
                 <TextView
                     android:id="@+id/tvName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/vs_5"
-                    android:focusable="false"
                     android:ellipsize="end"
+                    android:focusable="false"
+                    android:letterSpacing="0.04"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/ts_28" />
+                    android:textColor="@color/ui_text_primary"
+                    android:textSize="@dimen/ts_30"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -78,7 +86,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:textColor="@color/color_CCFFFFFF"
+                        android:textColor="@color/ui_text_secondary"
                         android:textSize="@dimen/ts_20" />
 
                     <TextView
@@ -91,7 +99,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:textColor="@color/color_CCFFFFFF"
+                        android:textColor="@color/ui_text_secondary"
                         android:textSize="@dimen/ts_20" />
 
                     <TextView
@@ -104,7 +112,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:textColor="@color/color_CCFFFFFF"
+                        android:textColor="@color/ui_text_secondary"
                         android:textSize="@dimen/ts_20" />
 
                     <TextView
@@ -117,7 +125,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:textColor="@color/color_CCFFFFFF"
+                        android:textColor="@color/ui_text_secondary"
                         android:textSize="@dimen/ts_20" />
 
                     <TextView
@@ -130,7 +138,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:textColor="@color/color_CCFFFFFF"
+                        android:textColor="@color/ui_text_secondary"
                         android:textSize="@dimen/ts_20" />
                 </LinearLayout>
 
@@ -142,7 +150,7 @@
                     android:focusable="false"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:textColor="@color/color_CCFFFFFF"
+                    android:textColor="@color/ui_text_secondary"
                     android:textSize="@dimen/ts_20" />
 
                 <TextView
@@ -153,18 +161,27 @@
                     android:focusable="false"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:textColor="@color/color_CCFFFFFF"
+                    android:textColor="@color/ui_text_secondary"
                     android:textSize="@dimen/ts_20" />
 
                 <TextView
                     android:id="@+id/tvPlayUrl"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/vs_8"
+                    android:background="@drawable/button_detail_secondary"
                     android:ellipsize="end"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/vs_15"
+                    android:paddingRight="@dimen/vs_15"
+                    android:paddingTop="@dimen/vs_6"
+                    android:paddingBottom="@dimen/vs_6"
                     android:singleLine="true"
-                    android:focusable="false"
-                    android:textColor="@color/color_CCFFFFFF"
-                    android:textSize="@dimen/ts_20" />
+                    android:text="复制链接"
+                    android:textColor="@color/ui_accent_bright"
+                    android:textSize="@dimen/ts_20"
+                    android:visibility="gone" />
 
 
                 <TextView
@@ -174,8 +191,8 @@
                     android:focusable="false"
                     android:ellipsize="end"
                     android:lineSpacingMultiplier="1.2"
-                    android:maxLines="3"
-                    android:textColor="@color/color_CCFFFFFF"
+                    android:maxLines="2"
+                    android:textColor="@color/ui_text_secondary"
                     android:textSize="@dimen/ts_20" />
 
                 <Space
@@ -198,9 +215,12 @@
                         android:focusable="true"
                         android:nextFocusUp="@id/previewPlayerBlock"
                         android:gravity="center"
+                        android:paddingLeft="@dimen/vs_15"
+                        android:paddingRight="@dimen/vs_15"
                         android:text="立即播放"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/vs_20" />
+                        android:textColor="@color/ui_bg_deep"
+                        android:textSize="@dimen/vs_20"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tvQuickSearch"
@@ -208,11 +228,11 @@
                         android:layout_height="@dimen/vs_40"
                         android:layout_marginEnd="@dimen/vs_10"
                         android:layout_marginRight="@dimen/vs_10"
-                        android:background="@drawable/button_detail_quick_search"
+                        android:background="@drawable/button_detail_secondary"
                         android:focusable="true"
                         android:gravity="center"
                         android:text="快速搜索"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/ui_text_primary"
                         android:textSize="@dimen/vs_20" />
 
                     <TextView
@@ -221,22 +241,22 @@
                         android:layout_height="@dimen/vs_40"
                         android:layout_marginEnd="@dimen/vs_10"
                         android:layout_marginRight="@dimen/vs_10"
-                        android:background="@drawable/button_detail_sort"
+                        android:background="@drawable/button_detail_secondary"
                         android:focusable="true"
                         android:gravity="center"
                         android:text="简介"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/ui_text_primary"
                         android:textSize="@dimen/vs_20" />
 
                     <TextView
                         android:id="@+id/tvCollect"
                         android:layout_width="@dimen/vs_120"
                         android:layout_height="@dimen/vs_40"
-                        android:background="@drawable/button_detail_collect"
+                        android:background="@drawable/button_detail_secondary"
                         android:focusable="true"
                         android:gravity="center"
                         android:text="加入收藏"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/ui_text_primary"
                         android:textSize="@dimen/vs_20" />
                 </LinearLayout>
             </LinearLayout>
@@ -266,9 +286,18 @@
                 android:layout_marginLeft="@dimen/vs_10"
                 android:gravity="center"
                 android:text="暂无播放数据"
-                android:textColor="@android:color/white"
+                android:textColor="@color/ui_text_secondary"
                 android:textSize="@dimen/ts_24" />
         </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/vs_50"
+            android:layout_marginTop="@dimen/vs_5"
+            android:text="播放线路"
+            android:textColor="@color/ui_text_secondary"
+            android:textSize="@dimen/ts_20" />
 
         <!-- mGridViewFlag 区域 -->
         <com.owen.tvrecyclerview.widget.TvRecyclerView
@@ -276,7 +305,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/vs_45"
             android:layout_marginLeft="@dimen/vs_50"
-            android:layout_marginTop="@dimen/vs_0"
+            android:layout_marginTop="@dimen/vs_5"
             android:layout_marginRight="@dimen/vs_50"
             android:clipChildren="false"
             android:clipToPadding="false"
@@ -307,7 +336,7 @@
                 android:paddingLeft="@dimen/vs_10"
                 android:paddingRight="@dimen/vs_10"
                 android:text="正序"
-                android:textColor="@android:color/white"
+                android:textColor="@color/ui_text_secondary"
                 android:textSize="@dimen/ts_20"
                 android:ellipsize="marquee"
                 android:singleLine="true"
@@ -334,12 +363,21 @@
         </LinearLayout>
 
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/vs_50"
+            android:layout_marginTop="@dimen/vs_8"
+            android:text="选集"
+            android:textColor="@color/ui_text_secondary"
+            android:textSize="@dimen/ts_20" />
+
         <com.owen.tvrecyclerview.widget.TvRecyclerView
             android:id="@+id/mGridView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/vs_50"
-            android:layout_marginTop="@dimen/vs_10"
+            android:layout_marginTop="@dimen/vs_5"
             android:layout_marginRight="@dimen/vs_50"
             android:layout_marginBottom="@dimen/vs_10"
             android:clipChildren="false"
@@ -351,8 +389,8 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/previewPlayer"
-        android:layout_width="@dimen/vs_470"
-        android:layout_height="@dimen/vs_300"
+        android:layout_width="@dimen/vs_480"
+        android:layout_height="@dimen/vs_320"
         android:layout_marginStart="@dimen/vs_50"
         android:layout_marginLeft="@dimen/vs_50"
         android:layout_marginTop="@dimen/vs_20"
@@ -362,8 +400,8 @@
 
     <View
         android:id="@+id/previewPlayerBlock"
-        android:layout_width="@dimen/vs_470"
-        android:layout_height="@dimen/vs_300"
+        android:layout_width="@dimen/vs_480"
+        android:layout_height="@dimen/vs_320"
         android:focusable="true"
         android:nextFocusDown="@id/mGridViewFlag"
         android:background="@drawable/preview_player_block"

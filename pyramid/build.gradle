@@ -15,7 +15,8 @@ android {
             abiFilters "armeabi-v7a", "arm64-v8a"
         }
         python {
-            buildPython("D:/Programs/Python/Python38/python.exe")
+            // 优先使用环境变量 PYTHON_EXE；Python 版需 3.8–3.11（Chaquopy 12 不支持 3.12）
+            buildPython(System.getenv("PYTHON_EXE") ?: "C:/Users/Administrator/AppData/Local/Programs/Python/Python310/python.exe")
             pip {
                 install "lxml"
                 install "ujson"

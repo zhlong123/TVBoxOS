@@ -4,13 +4,18 @@
         <shape>
             <corners android:radius="@dimen/preview_player_radius" />
             <solid android:color="@android:color/transparent" />
-            <stroke android:width="2mm" android:color="@android:color/white" />
+            <stroke
+                android:width="2.5mm"
+                android:color="@color/ui_stroke_focus" />
         </shape>
     </item>
-    <item android:state_focused="false">
+    <item>
         <shape>
             <corners android:radius="@dimen/preview_player_radius" />
             <solid android:color="@android:color/transparent" />
+            <stroke
+                android:width="1mm"
+                android:color="#18FFFFFF" />
         </shape>
     </item>
 </selector>

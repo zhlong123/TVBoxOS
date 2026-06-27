@@ -13,6 +13,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.base.BaseActivity;
 import com.github.tvbox.osc.ui.adapter.LocalFileAdapter;
+import com.github.tvbox.osc.util.FocusAnimHelper;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7LinearLayoutManager;
 
@@ -51,6 +52,21 @@ public class LocalFileActivity extends BaseActivity {
         fileList.setAdapter(adapter);
         fileList.setLayoutManager(new V7LinearLayoutManager(this, 1, false));
         fileList.setSpacingWithMargins(0, AutoSizeUtils.mm2px(this, 8));
+        fileList.setOnItemListener(new TvRecyclerView.OnItemListener() {
+            @Override
+            public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
+                FocusAnimHelper.focusOut(itemView);
+            }
+
+            @Override
+            public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+                FocusAnimHelper.focusIn(itemView);
+            }
+
+            @Override
+            public void onItemClick(TvRecyclerView parent, View itemView, int position) {
+            }
+        });
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {

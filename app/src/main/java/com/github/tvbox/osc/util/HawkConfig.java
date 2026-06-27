@@ -62,5 +62,17 @@ public class HawkConfig {
     public static final String DANMU_SIZE_SCALE = "danmu_size_scale";
     public static final String DANMU_RANDOM_COLOR = "danmu_random_color";
     public static final String DANMU_API = "danmu_api";
+    public static final String CLOUD_SERVER_URL = "cloud_server_url";
+    public static final String CLOUD_TOKEN = "cloud_token";
+    public static final String CLOUD_USERNAME = "cloud_username";
+    public static final String CLOUD_DEVICE_UUID = "cloud_device_uuid";
+    public static final String UI_CARD_WIDTH = "ui_card_width";
+    public static final String UI_CARD_HEIGHT = "ui_card_height";
+    public static final String UI_SEARCH_CARD_WIDTH = "ui_search_card_width";
+    public static final String UI_SEARCH_CARD_HEIGHT = "ui_search_card_height";
+    public static final String UI_GRID_SPAN = "ui_grid_span";
+    public static final String UI_GRID_SPACING = "ui_grid_spacing";
+    public static final String UI_ITEM_MARGIN = "ui_item_margin";
+    public static final String UI_FOCUS_SCALE = "ui_focus_scale";
     public static boolean hotVodDelete;
 }

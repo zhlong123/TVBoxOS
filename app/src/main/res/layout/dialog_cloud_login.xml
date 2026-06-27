@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/vs_30">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="云遥控账号"
+        android:textColor="@color/ui_text_primary"
+        android:textSize="@dimen/ts_28"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvCloudStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/vs_15"
+        android:gravity="center"
+        android:textColor="@color/ui_text_secondary"
+        android:textSize="@dimen/ts_22" />
+
+    <EditText
+        android:id="@+id/inputCloudServer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/vs_20"
+        android:background="@drawable/shape_setting_model_focus"
+        android:hint="后端地址 http://10.0.2.2:3080"
+        android:padding="@dimen/vs_15"
+        android:singleLine="true"
+        android:textColor="@color/ui_text_primary"
+        android:textColorHint="@color/ui_text_muted"
+        android:textSize="@dimen/ts_22" />
+
+    <EditText
+        android:id="@+id/inputCloudUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/vs_10"
+        android:background="@drawable/shape_setting_model_focus"
+        android:hint="用户名"
+        android:padding="@dimen/vs_15"
+        android:singleLine="true"
+        android:textColor="@color/ui_text_primary"
+        android:textColorHint="@color/ui_text_muted"
+        android:textSize="@dimen/ts_22" />
+
+    <EditText
+        android:id="@+id/inputCloudPass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/vs_10"
+        android:background="@drawable/shape_setting_model_focus"
+        android:hint="密码"
+        android:inputType="textPassword"
+        android:padding="@dimen/vs_15"
+        android:singleLine="true"
+        android:textColor="@color/ui_text_primary"
+        android:textColorHint="@color/ui_text_muted"
+        android:textSize="@dimen/ts_22" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/vs_20"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/btnCloudLogin"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/vs_50"
+            android:layout_marginEnd="@dimen/vs_5"
+            android:layout_weight="1"
+            android:background="@drawable/button_primary_amber"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="登录并连接"
+            android:textColor="@color/button_primary_amber_text"
+            android:textSize="@dimen/ts_22" />
+
+        <TextView
+            android:id="@+id/btnCloudLogout"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/vs_50"
+            android:layout_marginStart="@dimen/vs_5"
+            android:layout_weight="1"
+            android:background="@drawable/shape_setting_model_focus"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="退出登录"
+            android:textColor="@color/ui_text_primary"
+            android:textSize="@dimen/ts_22" />
+    </LinearLayout>
+</LinearLayout>

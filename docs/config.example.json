@@ -1,0 +1,41 @@
+{
+  "spider": "./custom_spider.jar",
+  "wallpaper": "https://example.com/wallpaper.jpg",
+  "sites": [
+    {
+      "key": "demo",
+      "name": "示例站点",
+      "type": 1,
+      "api": "https://example.com/api.json",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "playerType": 2,
+      "ext": ""
+    }
+  ],
+  "parses": [
+    {
+      "name": "默认解析",
+      "type": 1,
+      "url": "https://example.com/parse?url="
+    }
+  ],
+  "lives": [
+    {
+      "name": "默认直播",
+      "type": 0,
+      "url": "https://example.com/live.m3u",
+      "epg": "https://example.com/epg.xml",
+      "logo": "https://example.com/logo/"
+    }
+  ],
+  "hosts": [
+    "cache.example.com=cdn.example.com"
+  ],
+  "rules": [],
+  "doh": [
+    { "name": "腾讯", "url": "https://doh.pub/dns-query" },
+    { "name": "阿里", "url": "https://dns.alidns.com/dns-query" }
+  ]
+}

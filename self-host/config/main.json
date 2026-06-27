@@ -1,0 +1,55 @@
+{
+  "spider": "",
+  "wallpaper": "",
+  "sites": [
+    {
+      "key": "cms_json",
+      "name": "CMS-JSON（请修改 api）",
+      "type": 1,
+      "api": "https://你的域名/api.php/provide/vod/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "playerType": 2,
+      "ext": ""
+    },
+    {
+      "key": "cms_xml",
+      "name": "CMS-XML（请修改 api）",
+      "type": 0,
+      "api": "https://你的域名/api.php/provide/vod/at/xml/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "playerType": 2,
+      "ext": ""
+    }
+  ],
+  "parses": [
+    {
+      "name": "Web嗅探",
+      "type": 0,
+      "url": "空"
+    },
+    {
+      "name": "JSON解析（请修改 url）",
+      "type": 1,
+      "url": "https://你的解析地址/?url="
+    }
+  ],
+  "lives": [
+    {
+      "name": "本地直播示例（请修改 url）",
+      "type": 0,
+      "url": "http://127.0.0.1:9978/media/demo.m3u",
+      "epg": "",
+      "logo": ""
+    }
+  ],
+  "hosts": [],
+  "rules": [],
+  "doh": [
+    { "name": "腾讯", "url": "https://doh.pub/dns-query" },
+    { "name": "阿里", "url": "https://dns.alidns.com/dns-query" }
+  ]
+}

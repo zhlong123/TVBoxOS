@@ -14,7 +14,10 @@ import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.cache.VodCollect;
 import com.github.tvbox.osc.picasso.RoundTransformation;
 import com.github.tvbox.osc.util.DefaultConfig;
+import com.github.tvbox.osc.util.FocusAnimHelper;
 import com.github.tvbox.osc.util.HawkConfig;
+import com.github.tvbox.osc.util.ImgUtil;
+import com.github.tvbox.osc.util.UiLayoutConfig;
 import com.github.tvbox.osc.util.MD5;
 import com.squareup.picasso.Picasso;
 
@@ -52,7 +55,7 @@ public class CollectAdapter extends BaseQuickAdapter<VodCollect, BaseViewHolder>
                     .load(DefaultConfig.checkReplaceProxy(item.pic))
                     .transform(new RoundTransformation(MD5.string2MD5(item.pic))
                             .centerCorp(true)
-                            .override(AutoSizeUtils.mm2px(mContext, 240), AutoSizeUtils.mm2px(mContext, 336))
+                            .override(AutoSizeUtils.mm2px(mContext, ImgUtil.defaultWidth), AutoSizeUtils.mm2px(mContext, (int) (ImgUtil.defaultWidth * 1.4f)))
                             .roundRadius(AutoSizeUtils.mm2px(mContext, 10), RoundTransformation.RoundType.ALL))
                     .placeholder(R.drawable.img_loading_placeholder)
                     .noFade()
@@ -61,5 +64,7 @@ public class CollectAdapter extends BaseQuickAdapter<VodCollect, BaseViewHolder>
         } else {
             ivThumb.setImageResource(R.drawable.img_loading_placeholder);
         }
+        UiLayoutConfig.applyPosterItemSize(helper.itemView);
+        FocusAnimHelper.attachPosterItemFocus(helper.itemView);
     }
 }

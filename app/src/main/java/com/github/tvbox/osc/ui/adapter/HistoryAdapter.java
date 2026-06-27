@@ -12,11 +12,11 @@ import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.bean.VodInfo;
-import com.github.tvbox.osc.picasso.RoundTransformation;
 import com.github.tvbox.osc.util.DefaultConfig;
+import com.github.tvbox.osc.util.FocusAnimHelper;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.ImgUtil;
-import com.github.tvbox.osc.util.MD5;
+import com.github.tvbox.osc.util.UiLayoutConfig;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
  */
 public class HistoryAdapter extends BaseQuickAdapter<VodInfo, BaseViewHolder> {
     public HistoryAdapter() {
-        super(R.layout.item_grid, new ArrayList<>());
+        super(R.layout.item_history, new ArrayList<>());
     }
 
     @Override
@@ -41,33 +41,38 @@ public class HistoryAdapter extends BaseQuickAdapter<VodInfo, BaseViewHolder> {
         } else {
             tvDel.setVisibility(View.GONE);
         }
-    
-        TextView tvYear = helper.getView(R.id.tvYear);
-        SourceBean bean =  ApiConfig.get().getSource(item.sourceKey);
-        if(bean!=null){
-            tvYear.setText(bean.getName());
-        }else {
-            tvYear.setText("搜");
-//            tvYear.setVisibility(View.GONE);
-        }
-        helper.setVisible(R.id.tvLang, false);
-        helper.setVisible(R.id.tvArea, false);
-        if (item.note == null || item.note.isEmpty()) {
-            helper.setVisible(R.id.tvNote, false);
+
+        TextView tvSource = helper.getView(R.id.tvSource);
+        SourceBean bean = ApiConfig.get().getSource(item.sourceKey);
+        if (bean != null) {
+            tvSource.setText(bean.getName());
+            tvSource.setVisibility(View.VISIBLE);
         } else {
-            helper.setText(R.id.tvNote, item.note);
+            tvSource.setText("搜索");
+            tvSource.setVisibility(View.VISIBLE);
         }
+
+        TextView tvNote = helper.getView(R.id.tvNote);
+        if (item.note == null || item.note.isEmpty()) {
+            tvNote.setVisibility(View.GONE);
+        } else {
+            String note = item.note.trim();
+            if (note.length() > 18) {
+                note = note.substring(0, 17) + "…";
+            }
+            tvNote.setText(note);
+            tvNote.setVisibility(View.VISIBLE);
+        }
+
         helper.setText(R.id.tvName, item.name);
-        // helper.setText(R.id.tvActor, item.actor);
         ImageView ivThumb = helper.getView(R.id.ivThumb);
-        //由于部分电视机使用glide报错
+        int pxWidth = AutoSizeUtils.mm2px(mContext, ImgUtil.defaultWidth);
+        int pxHeight = AutoSizeUtils.mm2px(mContext, ImgUtil.defaultHeight);
         if (!TextUtils.isEmpty(item.pic)) {
             Picasso.get()
                     .load(DefaultConfig.checkReplaceProxy(item.pic))
-                    .transform(new RoundTransformation(MD5.string2MD5(item.pic))
-                            .centerCorp(true)
-                            .override(AutoSizeUtils.mm2px(mContext, ImgUtil.defaultWidth), AutoSizeUtils.mm2px(mContext, ImgUtil.defaultHeight))
-                            .roundRadius(AutoSizeUtils.mm2px(mContext, 10), RoundTransformation.RoundType.ALL))
+                    .resize(pxWidth, pxHeight)
+                    .centerCrop()
                     .placeholder(R.drawable.img_loading_placeholder)
                     .noFade()
                     .error(ImgUtil.createTextDrawable(item.name))
@@ -75,5 +80,7 @@ public class HistoryAdapter extends BaseQuickAdapter<VodInfo, BaseViewHolder> {
         } else {
             ivThumb.setImageDrawable(ImgUtil.createTextDrawable(item.name));
         }
+        UiLayoutConfig.applyPosterItemSize(helper.itemView);
+        FocusAnimHelper.attachPosterItemFocus(helper.itemView);
     }
 }

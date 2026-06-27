@@ -27,7 +27,7 @@ android:layout_height="wrap_content">
         android:id="@+id/tv_epg_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/white"/>
+        android:textColor="@color/ui_text_primary"/>
 		
     <com.github.tvbox.osc.ui.tv.widget.MarqueeTextView
         android:textSize="@dimen/ts_16"
@@ -36,7 +36,7 @@ android:layout_height="wrap_content">
         android:marqueeRepeatLimit="marquee_forever"
         android:gravity="center|left"
         android:id="@+id/tv_epg_name"
-        android:textColor="@android:color/white"
+        android:textColor="@color/ui_text_primary"
         android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
@@ -58,7 +58,7 @@ android:layout_height="wrap_content">
             android:background="@drawable/shape_setting_model_focus"
             android:gravity="center"
             android:text="回看"
-            android:textColor="@color/color_FFFFFF"
+            android:textColor="@color/ui_text_primary"
             android:textSize="@dimen/vs_15" />
 
         <com.github.tvbox.osc.ui.tv.widget.AudioWaveView

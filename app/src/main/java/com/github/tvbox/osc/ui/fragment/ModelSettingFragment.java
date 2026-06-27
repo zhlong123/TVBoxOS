@@ -33,6 +33,8 @@ import com.github.tvbox.osc.ui.adapter.ApiHistoryDialogAdapter;
 import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import com.github.tvbox.osc.ui.dialog.AboutDialog;
 import com.github.tvbox.osc.ui.dialog.ApiDialog;
+import com.github.tvbox.osc.cloud.CloudRemoteClient;
+import com.github.tvbox.osc.ui.dialog.CloudLoginDialog;
 import com.github.tvbox.osc.ui.dialog.ApiHistoryDialog;
 import com.github.tvbox.osc.ui.dialog.BackupDialog;
 import com.github.tvbox.osc.ui.dialog.DanmuApiDialog;
@@ -102,6 +104,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
     private boolean selectLocalLive;
     private TextView tvDanmuOpenText;
     private TextView tvDanmuApiText;
+    private TextView tvCloudRemoteStatus;
 
     public static ModelSettingFragment newInstance() {
         return new ModelSettingFragment().setArguments();
@@ -125,6 +128,8 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvDanmuOpenText = findViewById(R.id.danmuOpenText);
         tvDanmuOpenText.setText(DanmuHelper.isOpen() ? "开启" : "关闭");
         tvDanmuApiText = findViewById(R.id.danmuApiText);
+        tvCloudRemoteStatus = findViewById(R.id.tvCloudRemoteStatus);
+        refreshCloudRemoteStatus();
         refreshDanmuApiText();
         tvAutoSwitchLineText = findViewById(R.id.autoSwitchLineText);
         tvAutoSwitchLineText.setText(Hawk.get(HawkConfig.AUTO_SWITCH_LINE, true) ? "开启" : "关闭");
@@ -166,6 +171,15 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvIjkCachePlay.setText(Hawk.get(HawkConfig.IJK_CACHE_PLAY, false) ? "开启" : "关闭");
         tvHomeDefaultShow = findViewById(R.id.tvHomeText);
         tvHomeDefaultShow.setText(Hawk.get(HawkConfig.DEFAULT_LOAD_LIVE, false) ? "直播" : "点播");
+        findViewById(R.id.llCloudRemote).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                CloudLoginDialog dialog = new CloudLoginDialog(mActivity);
+                dialog.setOnDismissListener(dialogInterface -> refreshCloudRemoteStatus());
+                dialog.show();
+            }
+        });
         findViewById(R.id.llDebug).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -859,6 +873,43 @@ public class ModelSettingFragment extends BaseLazyFragment {
 
         findViewById(R.id.llIjkCachePlay).setOnClickListener((view -> onClickIjkCachePlay(view)));
         findViewById(R.id.llClearCache).setOnClickListener((view -> onClickClearCache(view)));
+        applySimplifiedSettingsUi();
+    }
+
+    /** 云遥控模式下，详细设置由手机端完成，电视仅保留必要入口。 */
+    private void applySimplifiedSettingsUi() {
+        int[] hideIds = new int[]{
+                R.id.llApiRightGroup,
+                R.id.llHomeApi,
+                R.id.tvHomeLive,
+                R.id.llHomeRec,
+                R.id.llHomeRecStyle,
+                R.id.llSearchView,
+                R.id.showFastSearch,
+                R.id.llPlay,
+                R.id.llMediaCodec,
+                R.id.m3u8Ad,
+                R.id.danmuOpen,
+                R.id.danmuApi,
+                R.id.llRender,
+                R.id.autoSwitchLine,
+                R.id.llDns,
+                R.id.llParseWebVew,
+                R.id.llSearchTv,
+                R.id.llHistoryNum,
+                R.id.llWp,
+                R.id.llWpRecovery,
+                R.id.llScale,
+                R.id.showPreview,
+                R.id.llIjkCachePlay,
+                R.id.llBackup,
+        };
+        for (int id : hideIds) {
+            View v = findViewById(id);
+            if (v != null) {
+                v.setVisibility(View.GONE);
+            }
+        }
     }
 
     private void restartAppAfterConfigChanged() {
@@ -900,6 +951,15 @@ public class ModelSettingFragment extends BaseLazyFragment {
             }
         }
         tvApiLine.setText(lineName);
+    }
+
+    private void refreshCloudRemoteStatus() {
+        if (tvCloudRemoteStatus == null) return;
+        if (CloudRemoteClient.get().isLoggedIn()) {
+            tvCloudRemoteStatus.setText(CloudRemoteClient.get().getUsername() + " · 已绑定");
+        } else {
+            tvCloudRemoteStatus.setText("未登录");
+        }
     }
 
     private void refreshDanmuApiText() {

@@ -33,10 +33,21 @@ public class InputRequestProcess implements RequestProcess {
         DataReceiver mDataReceiver = remoteServer.getDataReceiver();
         switch (fileName) {
             case "/action":
-                if (params.get("do") != null && mDataReceiver != null) {
+                if (params.get("do") != null) {
                     String action = params.get("do");
-
-                    switch (action) {
+                    if ("setting".equals(action)) {
+                        String settingKey = params.get("key");
+                        String settingValue = params.get("value");
+                        if (settingValue == null) {
+                            settingValue = "";
+                        }
+                        return RemoteServer.createJSONResponse(
+                                NanoHTTPD.Response.Status.OK,
+                                RemoteSettingsHelper.apply(settingKey, settingValue).toString()
+                        );
+                    }
+                    if (mDataReceiver != null) {
+                        switch (action) {
                         case "search": {
                             mDataReceiver.onTextReceived(params.get("word").trim());
                             break;
@@ -54,9 +65,16 @@ public class InputRequestProcess implements RequestProcess {
                             break;
                         }
                         case "push": {
-                            // 暂未实现
                             mDataReceiver.onPushReceived(params.get("url").trim());
                             break;
+                        }
+                        case "key": {
+                            String key = params.get("key");
+                            if (key != null) {
+                                mDataReceiver.onKeyReceived(key.trim());
+                            }
+                            break;
+                        }
                         }
                     }
                 }

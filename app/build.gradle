@@ -101,6 +101,8 @@ android {
         }
         release {
             minifyEnabled true
+            // 本地构建使用 debug 证书签名，否则 release 包无法安装
+            signingConfig signingConfigs.debug
         }
     }
 

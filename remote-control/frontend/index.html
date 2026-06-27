@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#0a0c10" />
+  <title>TVBox 遥控器</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Sans:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=3" />
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="bg-grain" aria-hidden="true"></div>
+
+  <div id="app">
+    <header class="header">
+      <div class="header-main">
+        <div class="brand">
+          <span id="liveDot" class="live-dot off"></span>
+          <div>
+            <p class="brand-title">TVBox Remote</p>
+            <p id="headerSub" class="brand-sub">未连接</p>
+          </div>
+        </div>
+        <button id="btnReconnect" class="icon-btn" type="button" title="连接/重连">⟳</button>
+      </div>
+    </header>
+
+    <section id="authPanel" class="connect-card">
+      <h1>登录云遥控</h1>
+      <p class="hint">一个账号绑定一台电视。请先在 TVBox <strong>设置 → 云遥控账号</strong> 用同一账号登录。</p>
+      <div class="auth-tabs">
+        <button id="tabLogin" class="auth-tab active" type="button">登录</button>
+        <button id="tabRegister" class="auth-tab" type="button">注册</button>
+      </div>
+      <label class="field">
+        <span class="field-label">后端地址</span>
+        <input id="serverInput" type="url" inputmode="url" placeholder="http://localhost:3080" autocomplete="off" />
+      </label>
+      <label class="field">
+        <span class="field-label">用户名</span>
+        <input id="usernameInput" type="text" autocomplete="username" placeholder="你的账号" />
+      </label>
+      <label class="field">
+        <span class="field-label">密码</span>
+        <input id="passwordInput" type="password" autocomplete="current-password" placeholder="至少 6 位" />
+      </label>
+      <button id="btnAuth" class="btn btn-primary" type="button">登录</button>
+      <p id="authStatus" class="status-line"></p>
+    </section>
+
+    <section id="connectPanel" class="connect-card" hidden>
+      <h1>连接电视</h1>
+      <p class="hint">手机与电视同一 WiFi。模拟器桥接后地址如 <code>http://192.168.50.8:9978</code></p>
+      <label class="field">
+        <span class="field-label">电视地址</span>
+        <input id="hostInput" type="url" inputmode="url" placeholder="http://192.168.50.8:9978" autocomplete="off" />
+      </label>
+      <button id="btnConnect" class="btn btn-primary" type="button">连接电视</button>
+      <p id="statusLine" class="status-line"></p>
+    </section>
+
+    <main id="remotePanel" class="main" hidden>
+      <div id="tab-control" class="tab-panel active">
+        <div class="panel-card">
+          <p class="panel-label">方向控制 · 长按连发</p>
+          <div class="dpad" id="dpad">
+            <button class="key key-up" data-key="up" type="button" aria-label="上"><span>▲</span></button>
+            <button class="key key-left" data-key="left" type="button" aria-label="左"><span>◀</span></button>
+            <button class="key key-ok" data-key="ok" type="button" aria-label="确定"><span>OK</span></button>
+            <button class="key key-right" data-key="right" type="button" aria-label="右"><span>▶</span></button>
+            <button class="key key-down" data-key="down" type="button" aria-label="下"><span>▼</span></button>
+            <div class="dpad-ring" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="quick-row">
+          <button class="quick-btn" data-key="back" type="button"><span class="qi">←</span>返回</button>
+          <button class="quick-btn" data-key="home" type="button"><span class="qi">⌂</span>主页</button>
+          <button class="quick-btn" data-key="menu" type="button"><span class="qi">☰</span>菜单</button>
+          <button class="quick-btn" data-key="play_pause" type="button"><span class="qi">⏯</span>播放</button>
+        </div>
+      </div>
+
+      <div id="tab-search" class="tab-panel">
+        <div class="panel-card">
+          <label class="field">
+            <span class="field-label">搜索关键词</span>
+            <input id="searchInput" type="search" placeholder="片名、演员…" enterkeyhint="search" />
+          </label>
+          <button id="btnSearch" class="btn btn-primary" type="button">在电视上搜索</button>
+        </div>
+      </div>
+
+      <div id="tab-push" class="tab-panel">
+        <div class="panel-card">
+          <label class="field">
+            <span class="field-label">播放地址</span>
+            <input id="pushInput" type="url" inputmode="url" placeholder="http:// 或 m3u8" />
+          </label>
+          <button id="btnPush" class="btn btn-primary" type="button">推送到电视</button>
+        </div>
+      </div>
+
+      <div id="tab-settings" class="tab-panel">
+        <div class="panel-card panel-card-flat">
+          <p class="hint settings-hint">修改后即时生效；改配置地址或清缓存会重启 TVBox。</p>
+          <div id="settingsLoading" class="settings-loading">正在加载设置…</div>
+          <div id="settingsForm" class="settings-form" hidden></div>
+        </div>
+      </div>
+    </main>
+
+    <nav id="bottomNav" class="bottom-nav" hidden>
+      <button class="nav-item active" data-tab="control" type="button"><span class="ni">◎</span>遥控</button>
+      <button class="nav-item" data-tab="search" type="button"><span class="ni">⌕</span>搜索</button>
+      <button class="nav-item" data-tab="push" type="button"><span class="ni">↗</span>推送</button>
+      <button class="nav-item" data-tab="settings" type="button"><span class="ni">⚙</span>设置</button>
+    </nav>
+  </div>
+
+  <div id="toast" class="toast" hidden role="status"></div>
+  <script src="app.js?v=3"></script>
+</body>
+</html>

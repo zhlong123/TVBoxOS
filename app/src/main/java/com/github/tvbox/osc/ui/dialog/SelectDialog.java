@@ -2,6 +2,7 @@ package com.github.tvbox.osc.ui.dialog;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -47,12 +48,30 @@ public class SelectDialog<T> extends BaseDialog {
         TvRecyclerView tvRecyclerView = findViewById(R.id.list);
         tvRecyclerView.setAdapter(adapter);
         tvRecyclerView.setSelectedPosition(select);
+        tvRecyclerView.setOnItemListener(new TvRecyclerView.OnItemListener() {
+            @Override
+            public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
+            }
+
+            @Override
+            public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+            }
+
+            @Override
+            public void onItemClick(TvRecyclerView parent, View itemView, int position) {
+                if (itemView != null) {
+                    itemView.performClick();
+                }
+            }
+        });
         if (select<10){
             tvRecyclerView.setSelection(select);
         }
         tvRecyclerView.post(new Runnable() {
             @Override
             public void run() {
+                tvRecyclerView.requestFocus();
+                tvRecyclerView.setSelectedPosition(selectIdx);
                 if (selectIdx >= 10) {
                     tvRecyclerView.smoothScrollToPosition(selectIdx);
                     tvRecyclerView.setSelectionWithSmooth(selectIdx);

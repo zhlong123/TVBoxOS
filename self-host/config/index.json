@@ -1,0 +1,32 @@
+{
+  "urls": [
+    {
+      "name": "多仓索引（GitHub）",
+      "url": "https://raw.githubusercontent.com/zhlong123/tvboxConfig/master/0707.json"
+    },
+    {
+      "name": "jsm 家庭电视（GitHub，推荐）",
+      "url": "https://raw.githubusercontent.com/zhlong123/tvboxConfig/master/jsm.json"
+    },
+    {
+      "name": "jsm 家庭电视（局域网）",
+      "url": "http://127.0.0.1:9978/tvboxConfig/jsm.json"
+    },
+    {
+      "name": "0821 大而全（GitHub）",
+      "url": "https://raw.githubusercontent.com/zhlong123/tvboxConfig/master/0821.json"
+    },
+    {
+      "name": "0825 小而精（GitHub）",
+      "url": "https://raw.githubusercontent.com/zhlong123/tvboxConfig/master/0825.json"
+    },
+    {
+      "name": "自定义 CMS 模板",
+      "url": "http://127.0.0.1:9978/config/main.json"
+    },
+    {
+      "name": "仅直播模板",
+      "url": "http://127.0.0.1:9978/config/live-only.json"
+    }
+  ]
+}

@@ -31,8 +31,10 @@ public class ImgUtil {
     public static boolean isBase64Image(String picUrl) {
         return picUrl.startsWith("data:image");
     }
-    public static int defaultWidth = 244;
-    public static int defaultHeight = 320;
+    public static int defaultWidth = 160;
+    public static int defaultHeight = 210;
+    public static int searchCardWidth = 145;
+    public static int searchCardHeight = 193;
 
     /**
      * style 数据结构：ratio 指定宽高比（宽 / 高），type 表示风格（例如 rect、list）
@@ -67,9 +69,9 @@ public class ImgUtil {
         int spanCount=defaultCount;
         if ("rect".equals(style.type)) {
             if (style.ratio >= 1.7) {
-                spanCount = 3; // 横图
+                spanCount = 4; // 横图
             } else if (style.ratio >= 1.3) {
-                spanCount = 4; // 4:3
+                spanCount = 5; // 4:3
             }
         } else if ("list".equals(style.type)) {
             spanCount = 1;
@@ -78,9 +80,9 @@ public class ImgUtil {
     }
 
     public static int getStyleDefaultWidth(Style style){
-        int styleDefaultWidth = 280;
-        if(style.ratio<1)styleDefaultWidth=214;
-        if(style.ratio>1.7)styleDefaultWidth=380;
+        int styleDefaultWidth = 231;
+        if(style.ratio<1)styleDefaultWidth=177;
+        if(style.ratio>1.7)styleDefaultWidth=314;
         return styleDefaultWidth;
     }
 
@@ -99,19 +101,19 @@ public class ImgUtil {
             return drawableCache.get(text);
         }
         int width = 180, height = 240; // 设定图片大小
-        int randomColor = getRandomColor();
-        float cornerRadius = AutoSizeUtils.mm2px(App.getInstance(), 5); // 圆角半径
+        int bgColor = Color.parseColor("#1C222D");
+        float cornerRadius = AutoSizeUtils.mm2px(App.getInstance(), 8); // 圆角半径
 
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         // 画圆角背景
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(randomColor);
+        paint.setColor(bgColor);
         paint.setStyle(Paint.Style.FILL);
         RectF rectF = new RectF(0, 0, width, height);
         canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, paint);
-        paint.setColor(Color.WHITE); // 文字颜色
-        paint.setTextSize(50); // 文字大小
+        paint.setColor(Color.parseColor("#F0C46A")); // 文字颜色
+        paint.setTextSize(56); // 文字大小
         paint.setTextAlign(Paint.Align.CENTER);
         Paint.FontMetrics fontMetrics = paint.getFontMetrics();
         float x = width / 2f;

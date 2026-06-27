@@ -11,6 +11,7 @@ import android.os.Message;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,6 +36,7 @@ import com.github.tvbox.osc.ui.adapter.ParseAdapter;
 import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import com.github.tvbox.osc.ui.dialog.SelectDialog;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
+import com.github.tvbox.osc.util.FocusAnimHelper;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.M3u8;
@@ -146,6 +148,10 @@ public class VodController extends BaseController {
     ImageView mLockView;
     LinearLayout mBottomRoot;
     LinearLayout mPlayBtnGroup;
+    LinearLayout mPlayMoreContainer;
+    LinearLayout mPlayMoreGroup;
+    TextView mPlayMoreBtn;
+    boolean mMoreMenuExpanded = false;
     LinearLayout mTopRoot1;
     LinearLayout mTopRoot2;
     LinearLayout mParseRoot;
@@ -234,6 +240,11 @@ public class VodController extends BaseController {
         mTopRoot1 = findViewById(R.id.tv_top_l_container);
         mTopRoot2 = findViewById(R.id.tv_top_r_container);
         mPlayBtnGroup = findViewById(R.id.play_btn_group);
+        mPlayMoreContainer = findViewById(R.id.play_btn_more_container);
+        mPlayMoreGroup = findViewById(R.id.play_btn_more_group);
+        mPlayMoreBtn = findViewById(R.id.play_more);
+        bindPlayButtonFocusAnim(mPlayBtnGroup);
+        bindPlayButtonFocusAnim(mPlayMoreGroup);
         tv_screen_display = findViewById(R.id.tv_screen_display);
         net_play_speed = findViewById(R.id.net_play_speed);
         mParseRoot = findViewById(R.id.parse_root);
@@ -272,6 +283,13 @@ public class VodController extends BaseController {
                 }
             }
         });
+        backBtn.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                FocusAnimHelper.focusIn(v);
+            } else {
+                FocusAnimHelper.focusOut(v);
+            }
+        });
         mLockView = findViewById(R.id.tv_lock);
         mLockView.setOnClickListener(new OnClickListener() {
             @Override
@@ -284,6 +302,13 @@ public class VodController extends BaseController {
                     mHandler.sendMessage(obtain);
                 }
                 showLockView();
+            }
+        });
+        mLockView.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                FocusAnimHelper.focusIn(v);
+            } else {
+                FocusAnimHelper.focusOut(v);
             }
         });
         View rootView = findViewById(R.id.rootView);
@@ -709,7 +734,21 @@ public class VodController extends BaseController {
         seekTime.setVisibility(disPlay);
         net_play_speed.setVisibility(disPlay);
         mPlayPauseTime.setVisibility(disPlay);
-        mScreenDisplay.setTextColor(disPlay==VISIBLE?getResources().getColor(R.color.color_02F8E1): Color.WHITE);
+        mScreenDisplay.setTextColor(disPlay == VISIBLE ? getResources().getColor(R.color.ui_accent_bright) : getResources().getColor(R.color.ui_text_primary));
+        mPlayMoreBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myHandle.removeCallbacks(myRunnable);
+                myHandle.postDelayed(myRunnable, myHandleSeconds);
+                if (mMoreMenuExpanded) {
+                    setMoreMenuExpanded(false);
+                    mPlayMoreBtn.requestFocus();
+                } else {
+                    setMoreMenuExpanded(true);
+                    focusFirstMoreButton();
+                }
+            }
+        });
         mScreenDisplay.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -718,12 +757,48 @@ public class VodController extends BaseController {
                 net_play_speed.setVisibility(disPlay);
                 if(disPlay==VISIBLE)mPlayPauseTime.setVisibility(disPlay);
                 Hawk.put(HawkConfig.SCREEN_DISPLAY, disPlay);
-                mScreenDisplay.setTextColor(disPlay==VISIBLE?getResources().getColor(R.color.color_02F8E1): Color.WHITE);
+                mScreenDisplay.setTextColor(disPlay == VISIBLE ? getResources().getColor(R.color.ui_accent_bright) : getResources().getColor(R.color.ui_text_primary));
                 hideBottom();
             }
         });
-        mNextBtn.setNextFocusLeftId(R.id.screen_display);
-        mScreenDisplay.setNextFocusRightId(R.id.play_next);
+        updateMoreMenuFocusChain();
+    }
+
+    private void setMoreMenuExpanded(boolean expanded) {
+        mMoreMenuExpanded = expanded;
+        if (mPlayMoreContainer != null) {
+            mPlayMoreContainer.setVisibility(expanded ? VISIBLE : GONE);
+        }
+        if (mPlayMoreBtn != null) {
+            mPlayMoreBtn.setText(expanded ? "收起" : "更多");
+        }
+        updateMoreMenuFocusChain();
+    }
+
+    private void updateMoreMenuFocusChain() {
+        if (mPlayMoreBtn == null) {
+            return;
+        }
+        int downId = mMoreMenuExpanded && mPlayMoreContainer != null
+                && mPlayMoreContainer.getVisibility() == VISIBLE
+                ? R.id.play_player : R.id.seekBar;
+        mPlayMoreBtn.setNextFocusDownId(downId);
+        if (mPlayerBtn != null) {
+            mPlayerBtn.setNextFocusUpId(R.id.play_more);
+        }
+    }
+
+    private void focusFirstMoreButton() {
+        if (mPlayMoreGroup == null) {
+            return;
+        }
+        for (int i = 0; i < mPlayMoreGroup.getChildCount(); i++) {
+            View child = mPlayMoreGroup.getChildAt(i);
+            if (child.getVisibility() == VISIBLE && child.isFocusable()) {
+                child.requestFocus();
+                return;
+            }
+        }
     }
 
     private void hideLiveAboutBtn() {
@@ -1018,6 +1093,24 @@ public class VodController extends BaseController {
         }
     }
 
+    private void bindPlayButtonFocusAnim(ViewGroup group) {
+        if (group == null) {
+            return;
+        }
+        for (int i = 0; i < group.getChildCount(); i++) {
+            View child = group.getChildAt(i);
+            if (child.isFocusable()) {
+                child.setOnFocusChangeListener((v, hasFocus) -> {
+                    if (hasFocus) {
+                        FocusAnimHelper.focusIn(v);
+                    } else {
+                        FocusAnimHelper.focusOut(v);
+                    }
+                });
+            }
+        }
+    }
+
     boolean isBottomVisible() {
         return mBottomRoot.getVisibility() == VISIBLE;
     }
@@ -1031,10 +1124,12 @@ public class VodController extends BaseController {
     void showUpBottom() {
         mHandler.removeMessages(1003);
         mHandler.sendEmptyMessage(1002);
+        setMoreMenuExpanded(true);
         mPlayerTimeStartBtn.requestFocus();
     }
 
     void hideBottom() {
+        setMoreMenuExpanded(false);
         mHandler.removeMessages(1002);
         mHandler.sendEmptyMessage(1003);
     }

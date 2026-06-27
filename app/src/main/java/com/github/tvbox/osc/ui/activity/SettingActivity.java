@@ -19,6 +19,7 @@ import com.github.tvbox.osc.ui.adapter.SettingMenuAdapter;
 import com.github.tvbox.osc.ui.adapter.SettingPageAdapter;
 import com.github.tvbox.osc.ui.fragment.ModelSettingFragment;
 import com.github.tvbox.osc.util.AppManager;
+import com.github.tvbox.osc.util.FocusAnimHelper;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
@@ -82,19 +83,21 @@ public class SettingActivity extends BaseActivity {
         mGridView.setOnItemListener(new TvRecyclerView.OnItemListener() {
             @Override
             public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
+                FocusAnimHelper.focusOut(itemView);
                 if (itemView != null) {
                     TextView tvName = itemView.findViewById(R.id.tvName);
-                    tvName.setTextColor(getResources().getColor(R.color.color_CCFFFFFF));
+                    tvName.setTextColor(getResources().getColor(R.color.ui_text_primary));
                 }
             }
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+                FocusAnimHelper.focusIn(itemView);
                 if (itemView != null) {
                     sortChange = true;
                     sortFocused = position;
                     TextView tvName = itemView.findViewById(R.id.tvName);
-                    tvName.setTextColor(Color.WHITE);
+                    tvName.setTextColor(getResources().getColor(R.color.ui_accent_bright));
                 }
             }
 

@@ -1,0 +1,20 @@
+{
+  "name": "tvbox-cloud-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TVBox 云遥控后端：账户、一账号一电视、WebSocket 指令转发",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.6.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^10.0.0",
+    "ws": "^8.18.0"
+  }
+}

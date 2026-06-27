@@ -17,6 +17,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.github.tvbox.osc.R;
+import com.github.tvbox.osc.util.FocusAnimHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,14 +31,19 @@ import java.util.List;
  */
 public class SearchKeyboard extends FrameLayout {
     private RecyclerView mRecyclerView;
-    private List<String> keys = Arrays.asList("远程搜索", "删除", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0");
+    private List<String> keys = Arrays.asList("删除", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0");
     private List<Keyboard> keyboardList = new ArrayList<>();
     private OnSearchKeyListener searchKeyListener;
-    private OnFocusChangeListener focusChangeListener = new OnFocusChangeListener() {
+    private OnFocusChangeListener         focusChangeListener = new OnFocusChangeListener() {
         @Override
         public void onFocusChange(View itemView, boolean hasFocus) {
             if (null != itemView && itemView != mRecyclerView) {
                 itemView.setSelected(hasFocus);
+                if (hasFocus) {
+                    FocusAnimHelper.focusIn(itemView);
+                } else {
+                    FocusAnimHelper.focusOut(itemView);
+                }
             }
         }
     };
@@ -82,10 +88,9 @@ public class SearchKeyboard extends FrameLayout {
         adapter.setSpanSizeLookup(new BaseQuickAdapter.SpanSizeLookup() {
             @Override
             public int getSpanSize(GridLayoutManager gridLayoutManager, int position) {
-                if (position == 0)
-                    return 3;
-                else if (position == 1)
-                    return 3;
+                if (position == 0) {
+                    return 6;
+                }
                 return 1;
             }
         });
@@ -133,10 +138,15 @@ public class SearchKeyboard extends FrameLayout {
 
         @Override
         protected void convert(BaseViewHolder helper, Keyboard item) {
-            switch (helper.getItemViewType()) {
-                case 1:
-                    helper.setText(R.id.keyName, item.key);
-                    break;
+            if (helper.getItemViewType() == 1) {
+                helper.setText(R.id.keyName, item.key);
+                View root = helper.itemView;
+                int position = helper.getAdapterPosition();
+                if (position == 0) {
+                    root.setBackgroundResource(R.drawable.button_detail_secondary);
+                } else {
+                    root.setBackgroundResource(R.drawable.shape_keyboard_key);
+                }
             }
         }
     }

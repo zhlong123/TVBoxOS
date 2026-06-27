@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.bean.SourceBean;
+import com.github.tvbox.osc.util.FocusAnimHelper;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.SearchHelper;
 
@@ -66,6 +67,7 @@ public class CheckboxSearchAdapter extends ListAdapter<SourceBean, CheckboxSearc
         int pos = holder.getAdapterPosition();
         SourceBean sourceBean = data.get(pos);
         holder.oneSearchSource.setText(sourceBean.getName());
+        FocusAnimHelper.attachSearchWordFocus(holder.oneSearchSource);
         holder.oneSearchSource.setOnCheckedChangeListener(null);
         if (mCheckedSources != null) {
             holder.oneSearchSource.setChecked(mCheckedSources.containsKey(sourceBean.getKey()));

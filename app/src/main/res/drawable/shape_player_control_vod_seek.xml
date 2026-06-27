@@ -1,30 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- 背景轨道 -->
     <item android:id="@android:id/background">
         <shape android:shape="rectangle">
-            <solid android:color="#4DFFFFFF" />
-            <corners android:radius="2dp"/>
-            <size android:height="3dp"/>
+            <solid android:color="#4DF3EFE6" />
+            <corners android:radius="3dp" />
+            <size android:height="4dp" />
         </shape>
     </item>
-    <!-- 缓冲进度 -->
     <item android:id="@android:id/secondaryProgress">
         <clip>
             <shape android:shape="rectangle">
-                <solid android:color="#66FFFFFF" />
-                <corners android:radius="2dp"/>
-                <size android:height="3dp"/>
+                <solid android:color="#66F0C46A" />
+                <corners android:radius="3dp" />
+                <size android:height="4dp" />
             </shape>
         </clip>
     </item>
-    <!-- 当前进度 -->
     <item android:id="@android:id/progress">
         <clip>
             <shape android:shape="rectangle">
-                <solid android:color="#FF4081" />
-                <corners android:radius="2dp"/>
-                <size android:height="3dp"/>
+                <solid android:color="@color/ui_accent" />
+                <corners android:radius="3dp" />
+                <size android:height="4dp" />
             </shape>
         </clip>
     </item>

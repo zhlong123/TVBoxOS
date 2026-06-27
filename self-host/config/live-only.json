@@ -1,0 +1,13 @@
+{
+  "sites": [],
+  "parses": [],
+  "lives": [
+    {
+      "name": "直播线路1（请修改 url）",
+      "type": 0,
+      "url": "https://你的域名/live.m3u",
+      "epg": "https://你的域名/epg.xml",
+      "logo": "https://你的域名/logo/"
+    }
+  ]
+}

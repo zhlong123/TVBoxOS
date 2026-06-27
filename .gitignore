@@ -99,3 +99,12 @@ lint/tmp/
 *.hprof
 *.md
 output-metadata.json
+
+# Synced TVBox config repo (see self-host/sync-tvbox-config.ps1)
+self-host/tvboxConfig/
+
+# IDE / local temp
+/.run/
+/.tmp_*
+/.tmp_apk/
+/.tmp_apk.zip

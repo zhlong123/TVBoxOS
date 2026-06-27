@@ -10,8 +10,10 @@ import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.bean.Movie;
 import com.github.tvbox.osc.picasso.RoundTransformation;
 import com.github.tvbox.osc.util.HawkConfig;
+import com.github.tvbox.osc.util.FocusAnimHelper;
 import com.github.tvbox.osc.util.ImgUtil;
 import com.github.tvbox.osc.util.MD5;
+import com.github.tvbox.osc.util.UiLayoutConfig;
 import com.orhanobut.hawk.Hawk;
 import com.squareup.picasso.Picasso;
 
@@ -29,6 +31,7 @@ public class SearchAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHolder>
         // lite
         if (Hawk.get(HawkConfig.SEARCH_VIEW, 0) == 0) {
             helper.setText(R.id.tvName, String.format("%s  %s %s %s", ApiConfig.get().getSource(item.sourceKey).getName(), item.name, item.type == null ? "" : item.type, item.note == null ? "" : item.note));
+            FocusAnimHelper.attachSearchWordFocus(helper.itemView);
         } else {// with preview
             helper.setText(R.id.tvName, item.name);
             helper.setText(R.id.tvSite, ApiConfig.get().getSource(item.sourceKey).getName());
@@ -51,6 +54,8 @@ public class SearchAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHolder>
             } else {
                 ivThumb.setImageDrawable(ImgUtil.createTextDrawable(item.name));
             }
+            UiLayoutConfig.applySearchItemSize(helper.itemView);
+            FocusAnimHelper.attachPosterItemFocus(helper.itemView);
         }
     }
 }

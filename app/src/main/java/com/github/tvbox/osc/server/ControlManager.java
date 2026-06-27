@@ -4,6 +4,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 
 import com.github.tvbox.osc.event.RefreshEvent;
@@ -82,7 +84,21 @@ public class ControlManager {
 
                 @Override
                 public void onApiReceived(String url) {
+                    if (TextUtils.isEmpty(url)) {
+                        return;
+                    }
+                    String oldApi = Hawk.get(HawkConfig.API_URL, "");
+                    Hawk.put(HawkConfig.API_URL, url);
+                    HistoryHelper.setApiHistory(url);
+                    String liveApi = Hawk.get(HawkConfig.LIVE_API_URL, "");
+                    if (TextUtils.isEmpty(liveApi) || liveApi.equals(oldApi)) {
+                        Hawk.put(HawkConfig.LIVE_API_URL, url);
+                        HistoryHelper.setLiveApiHistory(url);
+                    }
                     EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_API_URL_CHANGE, url));
+                    if (!url.equals(oldApi)) {
+                        restartAppAfterConfigChanged();
+                    }
                 }
 
                 @Override
@@ -104,6 +120,11 @@ public class ControlManager {
                 public void onPushReceived(String url) {
                     EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_PUSH_URL, url));
                 }
+
+                @Override
+                public void onKeyReceived(String key) {
+                    RemoteKeyHelper.dispatch(key);
+                }
             });
             try {
                 mServer.start();
@@ -115,6 +136,23 @@ public class ControlManager {
                 mServer.stop();
             }
         } while (RemoteServer.serverPort < 9999);
+    }
+
+    private void restartAppAfterConfigChanged() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mContext == null) {
+                    return;
+                }
+                Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(mContext.getPackageName());
+                if (intent != null) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    mContext.startActivity(intent);
+                    System.exit(0);
+                }
+            }
+        }, 1500);
     }
 
     public void stopServer() {

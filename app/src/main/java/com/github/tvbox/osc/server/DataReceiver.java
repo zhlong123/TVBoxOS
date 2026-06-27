@@ -20,4 +20,6 @@ public interface DataReceiver {
     void onDanmuApiReceived(String url);
 
     void onPushReceived(String url);
+
+    void onKeyReceived(String key);
 }

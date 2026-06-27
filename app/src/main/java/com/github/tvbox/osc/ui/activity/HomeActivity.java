@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.BounceInterpolator;
+import com.github.tvbox.osc.util.FocusAnimHelper;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -162,18 +162,13 @@ public class HomeActivity extends BaseActivity {
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            TextView textView = view.findViewById(R.id.tvTitle);
-                            textView.getPaint().setFakeBoldText(false);
                             if (sortFocused == p) {
-                                view.animate().scaleX(1.1f).scaleY(1.1f).setInterpolator(new BounceInterpolator()).setDuration(300).start();
-                                textView.setTextColor(HomeActivity.this.getResources().getColor(R.color.color_FFFFFF));
+                                updateHomeTabStyle(view, p, true);
                             } else {
-                                view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(300).start();
-                                textView.setTextColor(HomeActivity.this.getResources().getColor(R.color.color_BBFFFFFF));
                                 view.findViewById(R.id.tvFilter).setVisibility(View.GONE);
                                 view.findViewById(R.id.tvFilterColor).setVisibility(View.GONE);
+                                updateHomeTabStyle(view, p, false);
                             }
-                            textView.invalidate();
                         }
 
                         public final int p = position;
@@ -186,17 +181,13 @@ public class HomeActivity extends BaseActivity {
                     HomeActivity.this.currentView = view;
                     HomeActivity.this.isDownOrUp = false;
                     HomeActivity.this.sortChange = true;
-                    view.animate().scaleX(1.1f).scaleY(1.1f).setInterpolator(new BounceInterpolator()).setDuration(300).start();
-                    TextView textView = view.findViewById(R.id.tvTitle);
-                    textView.getPaint().setFakeBoldText(true);
-                    textView.setTextColor(HomeActivity.this.getResources().getColor(R.color.color_FFFFFF));
-                    textView.invalidate();
                     MovieSort.SortData sortData = sortAdapter.getItem(position);
                     if (!sortData.filters.isEmpty()) {
                         showFilterIcon(sortData.filterSelectCount());
                     }
                     HomeActivity.this.sortFocusView = view;
                     HomeActivity.this.sortFocused = position;
+                    updateHomeTabStyle(view, position, true);
                     mHandler.removeCallbacks(mDataRunnable);
                     mHandler.postDelayed(mDataRunnable, 200);
                 }
@@ -529,6 +520,41 @@ public class HomeActivity extends BaseActivity {
         }
     }
 
+    /** 网格列表向上越界时，将焦点交还给顶部分类 Tab。 */
+    public void focusSortTab() {
+        isDownOrUp = true;
+        if (sortFocusView != null) {
+            sortFocusView.requestFocus();
+            return;
+        }
+        if (mGridView == null) {
+            return;
+        }
+        mGridView.setSelection(sortFocused);
+        mGridView.post(() -> {
+            View itemView = mGridView.getLayoutManager().findViewByPosition(sortFocused);
+            if (itemView != null) {
+                itemView.requestFocus();
+            }
+        });
+    }
+
+    private void updateHomeTabStyle(View view, int position, boolean active) {
+        if (view == null) {
+            return;
+        }
+        TextView title = view.findViewById(R.id.tvTitle);
+        View indicator = view.findViewById(R.id.tvTabIndicator);
+        if (title != null) {
+            title.setTextColor(getResources().getColor(active ? R.color.title_fouse_n : R.color.color_BBFFFFFF));
+            title.getPaint().setFakeBoldText(active);
+            title.invalidate();
+        }
+        if (indicator != null) {
+            indicator.setVisibility(active ? View.VISIBLE : View.INVISIBLE);
+        }
+    }
+
     private void doExit() {
         // 如果两次返回间隔小于 2000 毫秒，则退出应用
         if (System.currentTimeMillis() - mExitTime < 2000) {
@@ -726,8 +752,11 @@ public class HomeActivity extends BaseActivity {
             @Override
             public void click(SourceBean value, int pos) {
                 dismissSiteSwitchDialog();
-                ApiConfig.get().setSourceBean(value);
-                refreshHome();
+                SourceBean current = ApiConfig.get().getHomeSourceBean();
+                if (current == null || !current.getKey().equals(value.getKey())) {
+                    ApiConfig.get().setSourceBean(value);
+                    refreshHome();
+                }
             }
             @Override
             public String getDisplay(SourceBean val) {

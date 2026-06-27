@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-<!--    筛选页背景颜色-->
     <corners
-        android:topLeftRadius="@dimen/vs_10"
-        android:topRightRadius="@dimen/vs_10" />
-    <solid android:color="@color/color_99FFFFFF" />
+        android:topLeftRadius="16mm"
+        android:topRightRadius="16mm" />
+    <solid android:color="#E6141820" />
+    <stroke
+        android:width="1mm"
+        android:color="@color/ui_stroke_subtle" />
 </shape>

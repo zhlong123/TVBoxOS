@@ -60,6 +60,7 @@ import com.github.tvbox.osc.ui.tv.widget.ViewObj;
 import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.EpgUtil;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
+import com.github.tvbox.osc.util.FocusAnimHelper;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.PlayerHelper;
@@ -1841,11 +1842,13 @@ public class LivePlayActivity extends BaseActivity {
         mRightEpgList.setOnItemListener(new TvRecyclerView.OnItemListener() {
             @Override
             public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
+                FocusAnimHelper.focusOut(itemView);
                 epgListAdapter.setFocusedEpgIndex(-1);
             }
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+                FocusAnimHelper.focusIn(itemView);
                 mHandler.removeCallbacks(mHideChannelListRun);
                 mHandler.postDelayed(mHideChannelListRun, postTimeout);
                 epgListAdapter.setFocusedEpgIndex(position);
@@ -2297,10 +2300,12 @@ public class LivePlayActivity extends BaseActivity {
         mChannelGroupView.setOnItemListener(new TvRecyclerView.OnItemListener() {
             @Override
             public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
+                FocusAnimHelper.focusOut(itemView);
             }
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+                FocusAnimHelper.focusIn(itemView);
                 selectChannelGroup(position, true, -1);
             }
 
@@ -2365,10 +2370,12 @@ public class LivePlayActivity extends BaseActivity {
         mLiveChannelView.setOnItemListener(new TvRecyclerView.OnItemListener() {
             @Override
             public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
+                FocusAnimHelper.focusOut(itemView);
             }
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+                FocusAnimHelper.focusIn(itemView);
                 if (position < 0) return;
                 liveChannelGroupAdapter.setFocusedGroupIndex(-1);
                 liveChannelItemAdapter.setFocusedChannelIndex(position);
@@ -2418,10 +2425,12 @@ public class LivePlayActivity extends BaseActivity {
         mSettingGroupView.setOnItemListener(new TvRecyclerView.OnItemListener() {
             @Override
             public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
+                FocusAnimHelper.focusOut(itemView);
             }
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+                FocusAnimHelper.focusIn(itemView);
                 selectVisibleSettingGroup(position, true);
             }
 
@@ -2500,10 +2509,12 @@ public class LivePlayActivity extends BaseActivity {
         mSettingItemView.setOnItemListener(new TvRecyclerView.OnItemListener() {
             @Override
             public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
+                FocusAnimHelper.focusOut(itemView);
             }
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+                FocusAnimHelper.focusIn(itemView);
                 if (position < 0) return;
                 liveSettingGroupAdapter.setFocusedGroupIndex(-1);
                 liveSettingItemAdapter.setFocusedItemIndex(position);

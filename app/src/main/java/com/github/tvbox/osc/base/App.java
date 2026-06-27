@@ -46,6 +46,7 @@ public class App extends MultiDexApplication {
         EpgUtil.init();
         // 初始化Web服务器
         ControlManager.init(this);
+        com.github.tvbox.osc.cloud.CloudRemoteClient.get().autoStart();
         //初始化数据库
         AppDataManager.init();
         LoadSir.beginBuilder()

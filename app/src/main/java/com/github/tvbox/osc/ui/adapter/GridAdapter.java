@@ -10,10 +10,10 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.bean.Movie;
-import com.github.tvbox.osc.picasso.RoundTransformation;
 import com.github.tvbox.osc.util.DefaultConfig;
+import com.github.tvbox.osc.util.FocusAnimHelper;
 import com.github.tvbox.osc.util.ImgUtil;
-import com.github.tvbox.osc.util.MD5;
+import com.github.tvbox.osc.util.UiLayoutConfig;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -59,10 +59,8 @@ public class GridAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHolder> {
                 }else {
                     Picasso.get()
                             .load(DefaultConfig.checkReplaceProxy(item.pic))
-                            .transform(new RoundTransformation(MD5.string2MD5(item.pic))
-                                    .centerCorp(true)
-                                    .override(AutoSizeUtils.mm2px(mContext, 240), AutoSizeUtils.mm2px(mContext, 336))
-                                    .roundRadius(AutoSizeUtils.mm2px(mContext, 10), RoundTransformation.RoundType.ALL))
+                            .resize(AutoSizeUtils.mm2px(mContext, ImgUtil.defaultWidth), AutoSizeUtils.mm2px(mContext, ImgUtil.defaultHeight))
+                            .centerCrop()
                             .placeholder(R.drawable.img_loading_placeholder)
                             .noFade()
                             .error(ImgUtil.createTextDrawable(item.name))
@@ -101,8 +99,12 @@ public class GridAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHolder> {
         if (TextUtils.isEmpty(item.note)) {
             helper.setVisible(R.id.tvNote, false);
         } else {
+            String note = item.note.trim();
+            if (note.length() > 16) {
+                note = note.substring(0, 15) + "…";
+            }
             helper.setVisible(R.id.tvNote, true);
-            helper.setText(R.id.tvNote, item.note);
+            helper.setText(R.id.tvNote, note);
         }
         helper.setText(R.id.tvName, item.name);
         helper.setText(R.id.tvActor, item.actor);
@@ -124,10 +126,8 @@ public class GridAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHolder> {
             }else {
                 Picasso.get()
                         .load(DefaultConfig.checkReplaceProxy(item.pic))
-                        .transform(new RoundTransformation(MD5.string2MD5(item.pic))
-                                .centerCorp(true)
-                                .override(AutoSizeUtils.mm2px(mContext,newWidth), AutoSizeUtils.mm2px(mContext,newHeight))
-                                .roundRadius(AutoSizeUtils.mm2px(mContext, 10), RoundTransformation.RoundType.ALL))
+                        .resize(AutoSizeUtils.mm2px(mContext, newWidth), AutoSizeUtils.mm2px(mContext, newHeight))
+                        .centerCrop()
                         .placeholder(R.drawable.img_loading_placeholder)
                         .noFade()
                         .error(ImgUtil.createTextDrawable(item.name))
@@ -137,20 +137,37 @@ public class GridAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHolder> {
             ivThumb.setImageDrawable(ImgUtil.createTextDrawable(item.name));
         }
         applyStyleToImage(ivThumb);//动态设置宽高
+        if (!mShowList) {
+            UiLayoutConfig.applyPosterItemSize(helper.itemView);
+            FocusAnimHelper.attachPosterItemFocus(helper.itemView);
+        }
     }
 
     /**
      * 根据传入的 style 动态设置 ImageView 的高度：高度 = 宽度 / ratio
      */
     private void applyStyleToImage(final ImageView ivThumb) {
-        if(style!=null){
+        if (style != null) {
             ViewGroup container = (ViewGroup) ivThumb.getParent();
             int width = defaultWidth;
             int height = (int) (width / style.ratio);
+            int pxWidth = AutoSizeUtils.mm2px(mContext, width);
+            int pxHeight = AutoSizeUtils.mm2px(mContext, height);
             ViewGroup.LayoutParams containerParams = container.getLayoutParams();
-            containerParams.height = AutoSizeUtils.mm2px(mContext, height); // 高度
-            containerParams.width = AutoSizeUtils.mm2px(mContext, width); // 宽度
+            containerParams.width = pxWidth;
+            containerParams.height = pxHeight;
             container.setLayoutParams(containerParams);
+            ViewGroup root = (ViewGroup) container.getParent();
+            if (root != null) {
+                View title = root.findViewById(R.id.tvName);
+                if (title != null) {
+                    title.getLayoutParams().width = pxWidth;
+                }
+                View actor = root.findViewById(R.id.tvActor);
+                if (actor != null) {
+                    actor.getLayoutParams().width = pxWidth;
+                }
+            }
         }
     }
 }

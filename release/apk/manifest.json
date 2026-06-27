@@ -1,0 +1,27 @@
+﻿[
+    {
+        "File":  "java/release/TVBox_release-java.apk",
+        "SizeMB":  30.41,
+        "Updated":  "2026-06-27 10:53:50"
+    },
+    {
+        "File":  "java32/release/TVBox_release-java32.apk",
+        "SizeMB":  18.18,
+        "Updated":  "2026-06-27 10:53:50"
+    },
+    {
+        "File":  "java64/debug/TVBox_debug-java64.apk",
+        "SizeMB":  24.48,
+        "Updated":  "2026-06-27 10:53:50"
+    },
+    {
+        "File":  "java64/release/TVBox_release-java64.apk",
+        "SizeMB":  19.13,
+        "Updated":  "2026-06-27 10:53:50"
+    },
+    {
+        "File":  "python64/release/TVBox_release-python64.apk",
+        "SizeMB":  35.16,
+        "Updated":  "2026-06-27 10:53:50"
+    }
+]

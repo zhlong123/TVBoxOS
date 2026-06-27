@@ -2,18 +2,16 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/vs_50"
-    android:layout_gravity="center"
-    android:layout_margin="@dimen/vs_4"
-    android:background="@drawable/shape_user_focus"
+    android:layout_margin="@dimen/vs_3"
+    android:background="@drawable/shape_keyboard_key"
     android:focusable="true">
 
     <TextView
         android:id="@+id/keyName"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
         android:gravity="center"
         android:textAlignment="gravity"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/ts_22" />
+        android:textColor="@color/ui_text_primary"
+        android:textSize="@dimen/ts_20" />
 </FrameLayout>

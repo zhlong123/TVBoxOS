@@ -2,15 +2,17 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true">
         <shape>
-            <corners android:radius="@dimen/vs_20" />
-            <solid android:color="@color/color_FF5F00" />
-            <stroke android:width="2mm" android:color="@android:color/white" />
+            <corners android:radius="20mm" />
+            <solid android:color="@color/ui_accent" />
+            <stroke
+                android:width="2mm"
+                android:color="@color/ui_stroke_focus" />
         </shape>
     </item>
-    <item android:state_focused="false">
+    <item>
         <shape>
-            <corners android:radius="@dimen/vs_20" />
-            <solid android:color="@color/color_FF5F00" />
+            <corners android:radius="20mm" />
+            <solid android:color="#CCB8862A" />
         </shape>
     </item>
 </selector>

@@ -6,15 +6,22 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.github.tvbox.osc.R;
+
+import java.lang.ref.WeakReference;
 
 import xyz.doikki.videoplayer.util.CutoutUtil;
 
 public class BaseDialog extends Dialog {
+
+    @Nullable
+    private static WeakReference<BaseDialog> sTopDialog;
     public BaseDialog(@NonNull Context context) {
         super(context, R.style.CustomDialogStyle);
     }
@@ -38,6 +45,67 @@ public class BaseDialog extends Dialog {
         super.show();
         hideSysBar();
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+        sTopDialog = new WeakReference<>(this);
+        requestDialogFocus();
+    }
+
+    @Override
+    public void dismiss() {
+        clearTopDialogIfSelf();
+        super.dismiss();
+    }
+
+    @Override
+    public void cancel() {
+        clearTopDialogIfSelf();
+        super.cancel();
+    }
+
+    @Nullable
+    public static View getTopShowingDecorView() {
+        BaseDialog dialog = sTopDialog != null ? sTopDialog.get() : null;
+        if (dialog == null || !dialog.isShowing() || dialog.getWindow() == null) {
+            return null;
+        }
+        return dialog.getWindow().getDecorView();
+    }
+
+    private void clearTopDialogIfSelf() {
+        if (sTopDialog != null && sTopDialog.get() == this) {
+            sTopDialog = null;
+        }
+    }
+
+    private void requestDialogFocus() {
+        View decor = getWindow().getDecorView();
+        decor.post(() -> {
+            View focus = findFirstFocusable(decor);
+            if (focus != null) {
+                focus.requestFocus();
+            } else {
+                decor.requestFocus();
+            }
+        });
+    }
+
+    @Nullable
+    private static View findFirstFocusable(View root) {
+        if (root == null || root.getVisibility() != View.VISIBLE) {
+            return null;
+        }
+        if (root.isFocusable()) {
+            return root;
+        }
+        if (root instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) root;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                View found = findFirstFocusable(group.getChildAt(i));
+                if (found != null) {
+                    return found;
+                }
+            }
+        }
+        return null;
     }
 
     private boolean isContextInvalid() {
