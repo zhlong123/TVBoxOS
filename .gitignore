@@ -108,3 +108,11 @@ self-host/tvboxConfig/
 /.tmp_*
 /.tmp_apk/
 /.tmp_apk.zip
+
+# Node (remote-control backend)
+/node_modules/
+remote-control/backend/node_modules/
+remote-control/backend/data/
+
+# 电视本地存储导出，勿提交
+TV-App/release/Hawk2.xml

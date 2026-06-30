@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true">
+        <layer-list>
+            <!-- 外层光晕 -->
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="@dimen/radius_poster_card" />
+                    <stroke
+                        android:width="@dimen/poster_focus_glow_outer"
+                        android:color="@color/ui_focus_glow_outer" />
+                    <solid android:color="@android:color/transparent" />
+                </shape>
+            </item>
+            <!-- 中层光晕 -->
+            <item
+                android:bottom="@dimen/poster_focus_glow_inset"
+                android:left="@dimen/poster_focus_glow_inset"
+                android:right="@dimen/poster_focus_glow_inset"
+                android:top="@dimen/poster_focus_glow_inset">
+                <shape android:shape="rectangle">
+                    <corners android:radius="@dimen/radius_poster_card_inner" />
+                    <stroke
+                        android:width="@dimen/poster_focus_glow_mid"
+                        android:color="@color/ui_focus_glow_mid" />
+                    <solid android:color="@android:color/transparent" />
+                </shape>
+            </item>
+            <!-- 内层亮边 -->
+            <item
+                android:bottom="@dimen/poster_focus_glow_inset_inner"
+                android:left="@dimen/poster_focus_glow_inset_inner"
+                android:right="@dimen/poster_focus_glow_inset_inner"
+                android:top="@dimen/poster_focus_glow_inset_inner">
+                <shape android:shape="rectangle">
+                    <corners android:radius="@dimen/radius_poster_card_inner" />
+                    <stroke
+                        android:width="@dimen/poster_focus_stroke"
+                        android:color="@color/ui_focus_ring_bright" />
+                    <solid android:color="@android:color/transparent" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+    <item android:state_selected="true">
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="@dimen/radius_poster_card" />
+                    <stroke
+                        android:width="@dimen/poster_focus_glow_outer"
+                        android:color="@color/ui_focus_glow_outer" />
+                    <solid android:color="@android:color/transparent" />
+                </shape>
+            </item>
+            <item
+                android:bottom="@dimen/poster_focus_glow_inset"
+                android:left="@dimen/poster_focus_glow_inset"
+                android:right="@dimen/poster_focus_glow_inset"
+                android:top="@dimen/poster_focus_glow_inset">
+                <shape android:shape="rectangle">
+                    <corners android:radius="@dimen/radius_poster_card_inner" />
+                    <stroke
+                        android:width="@dimen/poster_focus_glow_mid"
+                        android:color="@color/ui_focus_glow_mid" />
+                    <solid android:color="@android:color/transparent" />
+                </shape>
+            </item>
+            <item
+                android:bottom="@dimen/poster_focus_glow_inset_inner"
+                android:left="@dimen/poster_focus_glow_inset_inner"
+                android:right="@dimen/poster_focus_glow_inset_inner"
+                android:top="@dimen/poster_focus_glow_inset_inner">
+                <shape android:shape="rectangle">
+                    <corners android:radius="@dimen/radius_poster_card_inner" />
+                    <stroke
+                        android:width="@dimen/poster_focus_stroke"
+                        android:color="@color/ui_focus_ring_bright" />
+                    <solid android:color="@android:color/transparent" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/radius_poster_card" />
+            <stroke
+                android:width="1mm"
+                android:color="@color/ui_stroke_subtle" />
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+</selector>

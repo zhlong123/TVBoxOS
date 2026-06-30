@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Cinematic dark design tokens (TVBox UI refresh) -->
+    <color name="ui_bg_deep">#0A0C10</color>
+    <color name="ui_bg_surface">#151A22</color>
+    <color name="ui_bg_raised">#1C222D</color>
+    <color name="ui_accent">#E8A838</color>
+    <color name="ui_accent_bright">#F0C46A</color>
+    <color name="ui_text_primary">#F3EFE6</color>
+    <color name="ui_text_secondary">#B8B4AC</color>
+    <color name="ui_text_muted">#7A7670</color>
+    <color name="ui_stroke_subtle">#22FFFFFF</color>
+    <color name="ui_stroke_focus">#F0C46A</color>
+    <color name="ui_focus_glow_outer">#88F0C46A</color>
+    <color name="ui_focus_glow_mid">#CCF0C46A</color>
+    <color name="ui_focus_ring_bright">#FFF5D88A</color>
+  <!-- Primary CTA label on amber fill (WCAG ≥4.5:1 on ui_accent) -->
+    <color name="ui_text_on_accent">#1A1408</color>
+    <color name="ui_accent_dim">#33E8A838</color>
+    <color name="search_rank_1">#FFF5D88A</color>
+    <color name="search_rank_2">#F0C46A</color>
+    <color name="search_rank_3">#C9A86C</color>
+
+    <!-- Legacy names remapped to new palette (keeps Java/layout refs working) -->
+    <color name="color_6200EE">#E8A838</color>
+    <color name="color_3700B3">#B8862A</color>
+    <color name="color_03DAC5">#F0C46A</color>
+    <color name="title_fouse_n">#F0C46A</color>
+    <color name="color_1890FF">#C9922E</color>
+    <color name="color_FFB800">#E8A838</color>
+    <color name="color_00FF0A">#8BC48A</color>
+    <color name="color_CBF46A">#A8C47A</color>
+    <color name="color_FF90CA09">#90CA09</color>
+    <color name="color_BD0CADE2">#B3E8A838</color>
+    <color name="color_FF0057">#E85D5D</color>
+    <color name="color_FF5F00">#E8A838</color>
+    <color name="color_FFB6C1">#D4A574</color>
+    <color name="color_3D3D3D">#1C222D</color>
+    <color name="color_32364E">#151A22</color>
+    <color name="color_6632364E">#99151A22</color>
+    <color name="color_CCFFFFFF">#C9C5BD</color>
+    <color name="color_0CADE2">#E8A838</color>
+    <color name="color_6CFFFFFF">#66F3EFE6</color>
+    <color name="color_66000000">#660A0C10</color>
+    <color name="color_99000000">#CC0A0C10</color>
+    <color name="color_FFFFFF_50">#80F3EFE6</color>
+    <color name="color_CC000000">#CC0A0C10</color>
+    <color name="color_000000_30">#480A0C10</color>
+    <color name="color_02F8E1">#F0C46A</color>
+    <color name="color_353744">#1C222D</color>
+    <color name="color_CC353744">#CC1C222D</color>
+    <color name="color_6C3D3D3D">#801C222D</color>
+    <color name="color_BBFFFFFF">#B8B4AC</color>
+    <color name="color_FFFFFF">#F3EFE6</color>
+    <color name="color_33FFFFFF">#33F3EFE6</color>
+    <color name="color_99FFFFFF">#660A0C10</color>
+    <color name="color_59353744">#591C222D</color>
+    <color name="color_80FF0057">#66E85D5D</color>
+    <color name="color_000000_60">#990A0C10</color>
+    <color name="color_dialog_bg">#CC0A0C10</color>
+    <color name="color_scrollview_bg">#660A0C10</color>
+    <color name="color_text_primary">#F3EFE6</color>
+
+    <!-- Unified dialog palette -->
+    <color name="dialog_panel_bg">#E6141820</color>
+    <color name="dialog_panel_stroke">#33F0C46A</color>
+    <color name="dialog_control_bg">#801C222D</color>
+    <color name="dialog_control_bg_focused">#CCB8862A</color>
+    <color name="dialog_control_stroke">#22F3EFE6</color>
+    <color name="dialog_control_stroke_focused">#F0C46A</color>
+    <color name="dialog_input_bg">#661C222D</color>
+    <color name="dialog_text_primary">#F3EFE6</color>
+    <color name="dialog_text_hint">#807A7670</color>
+</resources>

@@ -4,124 +4,250 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="theme-color" content="#0a0c10" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#06080d" />
   <title>TVBox 遥控器</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Sans:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=3" />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=15" />
 </head>
 <body>
-  <div class="bg-glow" aria-hidden="true"></div>
-  <div class="bg-grain" aria-hidden="true"></div>
+  <div class="ambient" aria-hidden="true">
+    <div class="ambient-glow"></div>
+    <div class="ambient-scan"></div>
+  </div>
 
   <div id="app">
-    <header class="header">
-      <div class="header-main">
-        <div class="brand">
-          <span id="liveDot" class="live-dot off"></span>
-          <div>
-            <p class="brand-title">TVBox Remote</p>
-            <p id="headerSub" class="brand-sub">未连接</p>
-          </div>
+    <header class="topbar" id="topbar">
+      <div class="topbar-brand">
+        <span id="liveDot" class="status-pill off" aria-hidden="true"></span>
+        <div class="topbar-text">
+          <p class="topbar-title" id="headerTitle">TVBox</p>
+          <p id="headerSub" class="topbar-sub">云遥控</p>
         </div>
-        <button id="btnReconnect" class="icon-btn" type="button" title="连接/重连">⟳</button>
+      </div>
+      <div class="topbar-user-wrap">
+        <button id="btnReconnect" class="topbar-user is-guest" type="button" aria-label="账号" aria-expanded="false" aria-haspopup="true">
+          <span class="topbar-user-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </span>
+          <span id="headerUsername" class="topbar-username" hidden></span>
+        </button>
+        <div id="userMenu" class="user-menu" hidden>
+          <p id="userMenuName" class="user-menu-name"></p>
+          <button id="btnLogout" class="user-menu-item user-menu-logout" type="button">退出登录</button>
+        </div>
       </div>
     </header>
 
-    <section id="authPanel" class="connect-card">
-      <h1>登录云遥控</h1>
-      <p class="hint">一个账号绑定一台电视。请先在 TVBox <strong>设置 → 云遥控账号</strong> 用同一账号登录。</p>
-      <div class="auth-tabs">
-        <button id="tabLogin" class="auth-tab active" type="button">登录</button>
-        <button id="tabRegister" class="auth-tab" type="button">注册</button>
+    <section id="authPanel" class="screen screen-auth">
+      <div class="auth-hero">
+        <div class="auth-icon" aria-hidden="true">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="13" rx="2"/><path d="M17 7V5a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2"/><circle cx="12" cy="14" r="2"/></svg>
+        </div>
+        <h1 class="auth-title">连接你的电视</h1>
+        <p class="auth-desc">先在电视 <strong>设置 → 云遥控账号</strong> 登录同一账号，手机即可遥控。</p>
       </div>
-      <label class="field">
-        <span class="field-label">后端地址</span>
-        <input id="serverInput" type="url" inputmode="url" placeholder="http://localhost:3080" autocomplete="off" />
-      </label>
-      <label class="field">
-        <span class="field-label">用户名</span>
-        <input id="usernameInput" type="text" autocomplete="username" placeholder="你的账号" />
-      </label>
-      <label class="field">
-        <span class="field-label">密码</span>
-        <input id="passwordInput" type="password" autocomplete="current-password" placeholder="至少 6 位" />
-      </label>
-      <button id="btnAuth" class="btn btn-primary" type="button">登录</button>
-      <p id="authStatus" class="status-line"></p>
+
+      <div class="auth-tabs" role="tablist">
+        <button id="tabLogin" class="auth-tab active" type="button" role="tab" aria-selected="true">登录</button>
+        <button id="tabRegister" class="auth-tab" type="button" role="tab" aria-selected="false">注册</button>
+      </div>
+
+      <div class="auth-form">
+        <details class="field-advanced" id="serverAdvanced">
+          <summary>服务器地址</summary>
+          <label class="field">
+            <span class="field-label">后端地址</span>
+            <input id="serverInput" type="url" inputmode="url" placeholder="http://192.168.x.x:3080" autocomplete="off" />
+          </label>
+        </details>
+        <label class="field">
+          <span class="field-label">用户名</span>
+          <input id="usernameInput" type="text" autocomplete="username" placeholder="至少 3 个字符" />
+        </label>
+        <label class="field">
+          <span class="field-label">密码</span>
+          <input id="passwordInput" type="password" autocomplete="current-password" placeholder="至少 6 位" />
+        </label>
+        <button id="btnAuth" class="btn btn-primary" type="button">登录</button>
+        <p id="authStatus" class="form-status" role="status"></p>
+      </div>
     </section>
 
-    <section id="connectPanel" class="connect-card" hidden>
-      <h1>连接电视</h1>
-      <p class="hint">手机与电视同一 WiFi。模拟器桥接后地址如 <code>http://192.168.50.8:9978</code></p>
-      <label class="field">
-        <span class="field-label">电视地址</span>
-        <input id="hostInput" type="url" inputmode="url" placeholder="http://192.168.50.8:9978" autocomplete="off" />
-      </label>
-      <button id="btnConnect" class="btn btn-primary" type="button">连接电视</button>
-      <p id="statusLine" class="status-line"></p>
-    </section>
+    <main id="remotePanel" class="screen screen-remote" hidden>
+      <div id="offlineBanner" class="offline-banner" hidden role="alert">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        电视离线 — 请确认 TVBox 已登录同一账号
+      </div>
 
-    <main id="remotePanel" class="main" hidden>
       <div id="tab-control" class="tab-panel active">
-        <div class="panel-card">
-          <p class="panel-label">方向控制 · 长按连发</p>
+        <p class="panel-hint">长按方向键可连发</p>
+        <div class="dpad-wrap">
           <div class="dpad" id="dpad">
-            <button class="key key-up" data-key="up" type="button" aria-label="上"><span>▲</span></button>
-            <button class="key key-left" data-key="left" type="button" aria-label="左"><span>◀</span></button>
-            <button class="key key-ok" data-key="ok" type="button" aria-label="确定"><span>OK</span></button>
-            <button class="key key-right" data-key="right" type="button" aria-label="右"><span>▶</span></button>
-            <button class="key key-down" data-key="down" type="button" aria-label="下"><span>▼</span></button>
-            <div class="dpad-ring" aria-hidden="true"></div>
+            <button class="dpad-key dpad-up" data-key="up" type="button" aria-label="上">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6l-6 8h12z" fill="currentColor"/></svg>
+            </button>
+            <button class="dpad-key dpad-left" data-key="left" type="button" aria-label="左">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12l8-6v12z" fill="currentColor"/></svg>
+            </button>
+            <button class="dpad-key dpad-ok" data-key="ok" type="button" aria-label="确定"><span>OK</span></button>
+            <button class="dpad-key dpad-right" data-key="right" type="button" aria-label="右">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 12l-8-6v12z" fill="currentColor"/></svg>
+            </button>
+            <button class="dpad-key dpad-down" data-key="down" type="button" aria-label="下">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 18l6-8H6z" fill="currentColor"/></svg>
+            </button>
           </div>
         </div>
-        <div class="quick-row">
-          <button class="quick-btn" data-key="back" type="button"><span class="qi">←</span>返回</button>
-          <button class="quick-btn" data-key="home" type="button"><span class="qi">⌂</span>主页</button>
-          <button class="quick-btn" data-key="menu" type="button"><span class="qi">☰</span>菜单</button>
-          <button class="quick-btn" data-key="play_pause" type="button"><span class="qi">⏯</span>播放</button>
+        <div class="action-grid">
+          <button class="action-btn" data-key="back" type="button">
+            <span class="action-icon" aria-hidden="true">↩</span>
+            <span class="action-label">返回</span>
+          </button>
+          <button class="action-btn" data-key="home" type="button">
+            <span class="action-icon" aria-hidden="true">⌂</span>
+            <span class="action-label">主页</span>
+          </button>
+          <button class="action-btn" data-key="menu" type="button">
+            <span class="action-icon" aria-hidden="true">☰</span>
+            <span class="action-label">菜单</span>
+          </button>
+          <button class="action-btn" data-key="play_pause" type="button">
+            <span class="action-icon" aria-hidden="true">⏯</span>
+            <span class="action-label">播放</span>
+          </button>
         </div>
       </div>
 
       <div id="tab-search" class="tab-panel">
-        <div class="panel-card">
+        <div class="feature-card">
+          <h2 class="feature-title">电视搜索</h2>
+          <p class="feature-desc">关键词将发送到电视端搜索界面</p>
           <label class="field">
-            <span class="field-label">搜索关键词</span>
-            <input id="searchInput" type="search" placeholder="片名、演员…" enterkeyhint="search" />
+            <span class="field-label">关键词</span>
+            <input id="searchInput" type="search" placeholder="片名、演员…" enterkeyhint="search" autocomplete="off" />
           </label>
-          <button id="btnSearch" class="btn btn-primary" type="button">在电视上搜索</button>
+          <button id="btnSearch" class="btn btn-primary" type="button">开始搜索</button>
         </div>
       </div>
 
       <div id="tab-push" class="tab-panel">
-        <div class="panel-card">
+        <div class="feature-card">
+          <h2 class="feature-title">推送播放</h2>
+          <p class="feature-desc">支持 http / m3u8 等直链地址</p>
           <label class="field">
             <span class="field-label">播放地址</span>
-            <input id="pushInput" type="url" inputmode="url" placeholder="http:// 或 m3u8" />
+            <input id="pushInput" type="url" inputmode="url" placeholder="https://… 或 m3u8" autocomplete="off" />
           </label>
           <button id="btnPush" class="btn btn-primary" type="button">推送到电视</button>
         </div>
       </div>
 
-      <div id="tab-settings" class="tab-panel">
-        <div class="panel-card panel-card-flat">
-          <p class="hint settings-hint">修改后即时生效；改配置地址或清缓存会重启 TVBox。</p>
-          <div id="settingsLoading" class="settings-loading">正在加载设置…</div>
-          <div id="settingsForm" class="settings-form" hidden></div>
+      <div id="tab-configs" class="tab-panel tab-configs">
+        <header class="cfg-hero" id="configsHero">
+          <div class="cfg-hero-glow" aria-hidden="true"></div>
+          <p class="cfg-hero-eyebrow">电视当前配置</p>
+          <p class="cfg-hero-url" id="configsCurrentUrl">读取中…</p>
+          <p class="cfg-hero-hint">切换配置将重启 TVBox</p>
+        </header>
+
+        <div class="cfg-toolbar">
+          <label class="cfg-search" for="configSearch">
+            <svg class="cfg-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3-3"/></svg>
+            <input id="configSearch" type="search" placeholder="搜索名称或 URL…" enterkeyhint="search" autocomplete="off" />
+          </label>
+          <div class="cfg-classify">
+            <div class="cfg-classify-row">
+              <span class="cfg-classify-label">状态</span>
+              <div class="cfg-seg" id="configAvailFilter" role="tablist" aria-label="可用状态"></div>
+            </div>
+            <div class="cfg-classify-row" id="configWarehouseRow">
+              <span class="cfg-classify-label">仓型</span>
+              <div class="cfg-seg" id="configWarehouseFilter" role="tablist" aria-label="多仓单仓"></div>
+            </div>
+          </div>
+          <p class="cfg-stats" id="configStats" aria-live="polite"></p>
         </div>
+
+        <section id="configsTvSection" class="cfg-block" hidden>
+          <div class="cfg-block-head">
+            <h3 class="cfg-block-title">电视子线路</h3>
+            <p class="cfg-block-desc">多仓索引在电视端展开后的实时列表</p>
+          </div>
+          <div id="configsTvLinesList" class="cfg-catalog"></div>
+        </section>
+
+        <section class="cfg-block cfg-block-catalog">
+          <div class="cfg-block-head cfg-block-head-row">
+            <div>
+              <h3 class="cfg-block-title" id="configsCatalogTitle">配置目录</h3>
+              <p class="cfg-block-desc" id="configsCatalogDesc">按状态与仓型筛选 JSON 配置</p>
+            </div>
+            <button id="btnBatchTest" class="cfg-btn-ghost" type="button">测试筛选结果</button>
+          </div>
+          <div id="configsCatalog" class="cfg-catalog"></div>
+          <p id="configsEmpty" class="cfg-empty" hidden>没有匹配的线路</p>
+        </section>
+
+        <details class="cfg-fold" id="configsExcludedFold">
+          <summary class="cfg-fold-summary">不可用配置 <span class="cfg-fold-count" id="excludedCount">0</span></summary>
+          <div id="configsExcludedList" class="cfg-excluded-list"></div>
+        </details>
+
+        <details class="cfg-fold cfg-fold-custom">
+          <summary class="cfg-fold-summary">自定义线路</summary>
+          <div class="cfg-custom-inner">
+            <label class="field">
+              <span class="field-label">名称</span>
+              <input id="customLineName" type="text" placeholder="例如：我的配置" autocomplete="off" />
+            </label>
+            <label class="field">
+              <span class="field-label">JSON 地址</span>
+              <input id="customLineUrl" type="url" inputmode="url" placeholder="https://…/xxx.json" autocomplete="off" />
+            </label>
+            <button id="btnAddCustomLine" class="btn btn-primary" type="button">添加并显示在列表</button>
+            <div id="configsCustomList" class="cfg-catalog cfg-catalog-custom"></div>
+          </div>
+        </details>
+      </div>
+
+      <div id="tab-settings" class="tab-panel">
+        <p class="panel-hint settings-note">修改即时生效；改配置或清缓存会重启 TVBox</p>
+        <div id="settingsLoading" class="settings-loading">
+          <div class="spinner" aria-hidden="true"></div>
+          <span>正在从电视拉取设置…</span>
+        </div>
+        <div id="settingsForm" class="settings-form" hidden></div>
       </div>
     </main>
-
-    <nav id="bottomNav" class="bottom-nav" hidden>
-      <button class="nav-item active" data-tab="control" type="button"><span class="ni">◎</span>遥控</button>
-      <button class="nav-item" data-tab="search" type="button"><span class="ni">⌕</span>搜索</button>
-      <button class="nav-item" data-tab="push" type="button"><span class="ni">↗</span>推送</button>
-      <button class="nav-item" data-tab="settings" type="button"><span class="ni">⚙</span>设置</button>
-    </nav>
   </div>
 
-  <div id="toast" class="toast" hidden role="status"></div>
-  <script src="app.js?v=3"></script>
+  <nav id="bottomNav" class="dock" hidden aria-label="主导航">
+    <button class="dock-item active" data-tab="control" type="button">
+      <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>
+      <span>遥控</span>
+    </button>
+    <button class="dock-item" data-tab="search" type="button">
+      <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3-3"/></svg>
+      <span>搜索</span>
+    </button>
+    <button class="dock-item" data-tab="push" type="button">
+      <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+      <span>推送</span>
+    </button>
+    <button class="dock-item" data-tab="configs" type="button">
+      <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="19" cy="18" r="3"/></svg>
+      <span>线路</span>
+    </button>
+    <button class="dock-item" data-tab="settings" type="button">
+      <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <span>设置</span>
+    </button>
+  </nav>
+
+  <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
+  <script src="app.js?v=14"></script>
 </body>
 </html>

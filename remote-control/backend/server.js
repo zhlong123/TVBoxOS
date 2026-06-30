@@ -8,6 +8,7 @@
 
 const http = require('http');
 const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
 const { WebSocketServer } = require('ws');
@@ -16,6 +17,9 @@ const { v4: uuidv4 } = require('uuid');
 const store = require('./db');
 const auth = require('./auth');
 const hub = require('./hub');
+const configTest = require('./configTest');
+const { dedupeByUrl, normalizeConfigUrl } = require('./urlNormalize');
+const presetsPath = path.join(__dirname, 'presets.json');
 
 const PORT = Number(process.env.PORT || 3080);
 const frontendDir = path.join(__dirname, '..', 'frontend');
@@ -151,6 +155,45 @@ app.post('/api/settings', auth.authMiddleware, (req, res) => {
   }
   hub.sendToDevice(userId, { type: 'setting', key, value: value != null ? String(value) : '' });
   res.json({ ok: true, message: '已发送到电视' });
+});
+
+// ─── Config lines (JSON 线路测试) ───────────────────────
+app.get('/api/config/presets', auth.authMiddleware, (_req, res) => {
+  try {
+    const raw = JSON.parse(fs.readFileSync(presetsPath, 'utf8'));
+    const presets = dedupeByUrl(raw.presets || []);
+    const presetKeys = new Set(presets.map((p) => normalizeConfigUrl(p.url)));
+    const excluded = dedupeByUrl(raw.excluded || []).filter((e) => !presetKeys.has(normalizeConfigUrl(e.url)));
+    const multiCount = presets.filter((p) => p.warehouse === 'multi').length;
+    const singleCount = presets.filter((p) => p.warehouse === 'single').length;
+    res.json({
+      ok: true,
+      ...raw,
+      presetCount: presets.length,
+      excludedCount: excluded.length,
+      availableCount: presets.length,
+      unavailableCount: excluded.length,
+      multiCount,
+      singleCount,
+      presets,
+      excluded
+    });
+  } catch (e) {
+    res.status(500).json({ ok: false, message: '无法读取预设配置' });
+  }
+});
+
+app.post('/api/config/test', auth.authMiddleware, async (req, res) => {
+  const url = (req.body && req.body.url) ? String(req.body.url).trim() : '';
+  if (!url) {
+    return res.status(400).json({ ok: false, message: '缺少 url' });
+  }
+  try {
+    const result = await configTest.testConfigUrl(url);
+    res.json(result);
+  } catch (e) {
+    res.status(500).json({ ok: false, message: e.message || '测试失败' });
+  }
 });
 
 app.get('/health', (_req, res) => {

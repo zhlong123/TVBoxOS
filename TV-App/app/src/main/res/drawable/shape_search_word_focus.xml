@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true">
+        <inset
+            android:insetBottom="2mm"
+            android:insetLeft="2mm"
+            android:insetRight="2mm"
+            android:insetTop="2mm">
+            <shape android:shape="rectangle">
+                <corners android:radius="@dimen/radius_search_word_inner" />
+                <stroke
+                    android:width="@dimen/search_word_focus_stroke"
+                    android:color="@color/ui_focus_ring_bright" />
+                <solid android:color="@android:color/transparent" />
+            </shape>
+        </inset>
+    </item>
+    <item android:state_selected="true">
+        <inset
+            android:insetBottom="2mm"
+            android:insetLeft="2mm"
+            android:insetRight="2mm"
+            android:insetTop="2mm">
+            <shape android:shape="rectangle">
+                <corners android:radius="@dimen/radius_search_word_inner" />
+                <stroke
+                    android:width="@dimen/search_word_focus_stroke"
+                    android:color="@color/ui_focus_ring_bright" />
+                <solid android:color="@android:color/transparent" />
+            </shape>
+        </inset>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/radius_search_word" />
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+</selector>

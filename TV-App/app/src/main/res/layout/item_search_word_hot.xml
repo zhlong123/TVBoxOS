@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/vs_4"
+    android:paddingBottom="@dimen/vs_4">
+
+    <FrameLayout
+        android:id="@+id/searchWordFrame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:defaultFocusHighlightEnabled="false"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:minHeight="@dimen/search_word_min_height">
+
+        <View
+            android:id="@+id/searchWordBody"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_search_word_body" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/search_word_min_height"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvSearchWordRank"
+                android:layout_width="@dimen/search_word_rank_width"
+                android:layout_height="wrap_content"
+                android:duplicateParentState="false"
+                android:focusable="false"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="@color/ui_text_muted"
+                android:textSize="@dimen/ts_20"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvSearchWord"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:duplicateParentState="false"
+                android:ellipsize="marquee"
+                android:focusable="false"
+                android:gravity="center_vertical"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:paddingRight="@dimen/vs_15"
+                android:singleLine="true"
+                android:textColor="@color/ui_text_primary"
+                android:textSize="@dimen/ts_22" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/searchWordFocusRing"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_search_word_focus"
+            android:clickable="false"
+            android:duplicateParentState="true"
+            android:focusable="false" />
+    </FrameLayout>
+</LinearLayout>

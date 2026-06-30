@@ -3,8 +3,9 @@
 
 $ErrorActionPreference = 'Stop'
 $Root = Split-Path $PSScriptRoot -Parent
-$SrcRoot = Join-Path $Root 'app\build\outputs\apk'
-$DestRoot = Join-Path $Root 'release\apk'
+$TvApp = Join-Path $Root 'TV-App'
+$SrcRoot = Join-Path $TvApp 'app\build\outputs\apk'
+$DestRoot = Join-Path $TvApp 'release\apk'
 
 if (-not (Test-Path $SrcRoot)) {
     Write-Host "未找到构建输出: $SrcRoot"

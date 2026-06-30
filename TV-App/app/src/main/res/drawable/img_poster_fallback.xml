@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/img_poster_placeholder" />
+    <item
+        android:bottom="1.5mm"
+        android:left="1.5mm"
+        android:right="1.5mm"
+        android:top="1.5mm">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/radius_poster_card_inner" />
+            <solid android:color="#00000000" />
+            <stroke
+                android:width="0.6mm"
+                android:color="#14FFFFFF" />
+        </shape>
+    </item>
+</layer-list>

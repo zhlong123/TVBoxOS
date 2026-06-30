@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/radius_search_word" />
+            <gradient
+                android:angle="0"
+                android:endColor="#28F0C46A"
+                android:startColor="#1AE8A838"
+                android:type="linear" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/radius_search_word" />
+            <solid android:color="#12182028" />
+        </shape>
+    </item>
+</selector>

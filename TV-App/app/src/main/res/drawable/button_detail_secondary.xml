@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true">
+        <inset
+            android:insetBottom="1mm"
+            android:insetLeft="1mm"
+            android:insetRight="1mm"
+            android:insetTop="1mm">
+            <shape>
+                <corners android:radius="20mm" />
+                <stroke
+                    android:width="1mm"
+                    android:color="@color/ui_focus_ring_bright" />
+                <solid android:color="#33E8A838" />
+            </shape>
+        </inset>
+    </item>
+    <item>
+        <shape>
+            <corners android:radius="20mm" />
+            <stroke
+                android:width="1mm"
+                android:color="#33F0C46A" />
+            <solid android:color="#80151A22" />
+        </shape>
+    </item>
+</selector>

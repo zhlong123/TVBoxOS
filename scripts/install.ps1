@@ -10,10 +10,11 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $Root = Split-Path $PSScriptRoot -Parent
-$apk = Join-Path $Root "release\apk\$Flavor\$Type\TVBox_${Type}-${Flavor}.apk"
+$TvApp = Join-Path $Root 'TV-App'
+$apk = Join-Path $TvApp "release\apk\$Flavor\$Type\TVBox_${Type}-${Flavor}.apk"
 
 if (-not (Test-Path $apk)) {
-    $apk = Join-Path $Root "app\build\outputs\apk\$Flavor\$Type\TVBox_${Type}-${Flavor}.apk"
+    $apk = Join-Path $TvApp "app\build\outputs\apk\$Flavor\$Type\TVBox_${Type}-${Flavor}.apk"
 }
 
 if (-not (Test-Path $apk)) {

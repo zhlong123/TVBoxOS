@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="@dimen/radius_poster_card" />
+    <gradient
+        android:angle="270"
+        android:centerColor="#171C26"
+        android:endColor="#12161E"
+        android:startColor="#1E2430"
+        android:type="linear" />
+</shape>
